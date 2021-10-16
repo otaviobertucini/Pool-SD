@@ -1,17 +1,20 @@
 import Pyro4
 import threading
+import sys
+
+Running = True
 
 @Pyro4.expose
 @Pyro4.callback
 class Client(object):
 
     def notification(self):
-        print("callback recebido do server!")
-        
-def loopThread(daemon):
-    # thread para ficar escutando chamadas de método do server
-    print('iajsdndjuisnadjuiabsnjidbas')
-    daemon.requestLoop()
+        print("callback recebido do server!")   
+
+    def loopThread(daemon):
+        # thread para ficar escutando chamadas de método do server
+        print('Cliente esperando')
+        daemon.requestLoop(lambda: Running)
 
 def main():
 
@@ -27,8 +30,15 @@ def main():
     daemon.register(callback)
     # loopThread = callback.loopThread
     # inicializa a thread para receber notificações do server
-    thread = threading.Thread(target=loopThread, args=(daemon,))
-    thread.daemon = True
+    thread = threading.Thread(target=Client.loopThread, args=(daemon,))
+    thread.daemon = False
     thread.start()
+    for line in sys.stdin:
+        if 'exit' == line.rstrip():
+            global Running
+            Running = False
+            break
+        print('Digite exit para sair')
+    print('Exit')
 
 main()
