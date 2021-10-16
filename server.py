@@ -7,17 +7,23 @@ import Pyro4
 @Pyro4.behavior(instance_mode="single")
 class Server(object):
 
-    def test(self):
+    #coesão e desacoplamento------------------------       MÃO DO SIMÃO
+    def runServer(self):                              #$$$$$$$$$$$$$$$$$$$$$$$$$
+        with Pyro4.Daemon() as daemon:                #$$$$$$$$$$$$$$$$$$$' '$$$
+#registra a aplicação do servidor no serviço de nomes #$$$$$$$$$$$$$$$$$$$  $$$$
+            uri = daemon.register(self)               #$$$$$$$'/ $/ `/ `$' .$$$$
+            ns = Pyro4.locateNS()                     #$$$$$$'|. i  i  /! .$$$$$
+            ns.register("SearchNameServer", uri)      #$$$$$$$'_'.--'--'  $$$$$$        
+            print("Server is ready")                  #$$^^$$$$$'        J$$$$$$
+            daemon.requestLoop()                      #$$$   ~""   `.   .$$$$$$$
+                                                      #$$$$$',      ;  '$$$$$$$$                                                
+                                                      #$$$$$$$$$$$.'   $$$$$$$$$
+    def test(self):                                 
 
         print("Não sei de nada")
 
 def main():
-    # registra a aplicação do servidor no serviço de nomes
-    daemon = Pyro4.Daemon()
-    ns = Pyro4.locateNS()
-    uri = daemon.register(Server)
-    ns.register("SearchNameServer", uri)
-    print("A aplicacao esta ativa")
-    daemon.requestLoop()
+    server = Server()
+    server.runServer()
 
 main()
