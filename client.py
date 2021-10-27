@@ -18,6 +18,8 @@ menu_message = '\nDigite 1 para cadastrar enquete\nDigite 2 para votar em uma en
 @Pyro4.callback
 class Client(object):
 
+    count = 1
+
     @Pyro4.expose
     def notification(self, poll, suggestions):
         print("Nova enquete recebida: " + str(poll))
@@ -26,13 +28,14 @@ class Client(object):
     def newPoll(self, server, userName):
         # cliente preenche nome, título, local e data da reunião e data limite para votação
         # clientName = input('Digite o nome do cliente: ')
-        title = input('Digite o nome da enquete/reunião: ')
-        place = input('Digite o local da reunião: ')
-        suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
-        dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
+        # title = input('Digite o nome da enquete/reunião: ')
+        # place = input('Digite o local da reunião: ')
+        # suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
+        # dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
         # chama o método do server passando as informações necessárias para criar nova enquete no servidor
         # server.newPoll(clientName, title, place, suggestions, dueDate)
-        server.newPoll(userName, 'hu3', 'montanha', '26/10/2021 10:00', '26/10/2021 21:00')
+        server.newPoll(userName, 'hu3' + str(self.count), 'montanha', '26/10/2021 10:00', '26/10/2021 21:00')
+        self.count = self.count + 1
 
     def loopThread(daemon):
         # thread para ficar escutando chamadas de método do server
@@ -73,7 +76,7 @@ def main():
             Running = False
             break
         if '1' == line.rstrip():
-            callback.newPoll(server)
+            callback.newPoll(server, userName)
         if '2' == line.rstrip():
             pass
         if '3' == line.rstrip():

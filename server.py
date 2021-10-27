@@ -1,5 +1,6 @@
 import Pyro4
-
+import threading
+from datetime import datetime, timedelta
 # configura uma instância única do servidor para ser consumida por diversos
 # clientes
 
@@ -45,6 +46,11 @@ class Server(object):
     clients = []
     polls = []
 
+    startDate = None
+
+    def __init__(self):
+        self.startDate = datetime.now() + timedelta(seconds=5)
+
     #coesão e desacoplamento------------------------       MÃO DO SIMÃO
     def runServer(self):                              #$$$$$$$$$$$$$$$$$$$$$$$$$
         with Pyro4.Daemon() as daemon:                #$$$$$$$$$$$$$$$$$$$' '$$$
@@ -52,7 +58,6 @@ class Server(object):
             uri = daemon.register(self)               #$$$$$$$'/ $/ `/ `$' .$$$$
             ns = Pyro4.locateNS()                     #$$$$$$'|. i  i  /! .$$$$$
             ns.register("SearchNameServer", uri)      #$$$$$$$'_'.--'--'  $$$$$$        
-            print('uri:', uri)
             print("Server is ready")                  #$$^^$$$$$'        J$$$$$$
             daemon.requestLoop()                      #$$$   ~""   `.   .$$$$$$$
                                                       #$$$$$',      ;  '$$$$$$$$                                                
@@ -61,7 +66,6 @@ class Server(object):
     @Pyro4.expose    
     def newPoll(self, clientName, title, place, suggestions, dueDate):
         
-        print('cheguei1')
         owner = None
         for client in self.clients:
 
@@ -75,15 +79,11 @@ class Server(object):
             return
 
 
-        poll = Poll(title, owner, dueDate, place, suggestions.replace(' ', '').split(','))
-        print('cheguei2')
+        poll = Poll(title, owner, dueDate, place, suggestions.replace(r' {0,}, {0,}', ',').split(','))
         self.polls.append(poll)
 
-        print(self.clients)
         for client in self.clients:
-            client.getReference().notification(title, suggestions.replace(' ', '').split(','))
-
-        print('saiu do forzão')
+            client.getReference().notification(title, suggestions.replace(r' {0,}, {0,}', ',').split(','))
 
     @Pyro4.expose
     def test(self):                                 
@@ -111,8 +111,19 @@ class Server(object):
 
             print('oie: ' + client.name)
 
+    def checkDueDate(self):
+
+        while True:
+            if(self.startDate < datetime.now()):
+                print('passei!')
+
 def main():
     server = Server()
+
+    # thread = threading.Thread(target=server.checkDueDate)
+    # thread.daemon = True
+    # thread.start()
+    
     server.runServer()
 
 main()
