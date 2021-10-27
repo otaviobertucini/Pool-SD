@@ -12,25 +12,38 @@ Running = True
 # keyPair = RSA.generate(1024, random_seed)
 # pubKey = keyPair.publickey()
 
-menu_message = 'Digite 1 para cadastrar usuário\nDigite 2 para cadastrar nova enquete\nDigite 3 para votar em uma enquete'
+menu_message = '\nDigite 1 para cadastrar enquete\nDigite 2 para votar em uma enquete\nDigite 3 para mostrar resultado de enquete'
 
 @Pyro4.expose
 @Pyro4.callback
 class Client(object):
 
     @Pyro4.expose
-    def notification(self):
-        print("callback recebido do server!")   
+    def notification(self, poll, suggestions):
+        print("Nova enquete recebida: " + str(poll))
+
+
+    def newPoll(self, server, userName):
+        # cliente preenche nome, título, local e data da reunião e data limite para votação
+        # clientName = input('Digite o nome do cliente: ')
+        title = input('Digite o nome da enquete/reunião: ')
+        place = input('Digite o local da reunião: ')
+        suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
+        dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
+        # chama o método do server passando as informações necessárias para criar nova enquete no servidor
+        # server.newPoll(clientName, title, place, suggestions, dueDate)
+        server.newPoll(userName, 'hu3', 'montanha', '26/10/2021 10:00', '26/10/2021 21:00')
 
     def loopThread(daemon):
         # thread para ficar escutando chamadas de método do server
-        print('Menu')
-        print(menu_message)
+        # print('Menu')
+        # print(menu_message)
+        # print('aisjdiasjdj')
         daemon.requestLoop(lambda: Running)
 
     def callBackLoopThread(objetc):
         # thread->requestLoop do callback
-        print('sei não ehin')
+        print('callback()')
 
 def main():
 
@@ -50,16 +63,22 @@ def main():
     thread = threading.Thread(target=Client.loopThread, args=(daemon,))
     thread.daemon = False
     thread.start()
+    userName = input('Nome do usuário: ')
+    server.register(client_uri, userName, None)
+    print('Usuário criado: ' + str(userName))
+    print(menu_message)
     for line in sys.stdin:
         if 'exit' == line.rstrip():
             global Running
             Running = False
             break
+        if '1' == line.rstrip():
+            callback.newPoll(server)
         if '2' == line.rstrip():
-            pool_name = input('Nome da enquete: ')
-            server.register(client_uri, pool_name, None)
-            print('Enquete criada: ' + str(pool_name))
+            pass
         if '3' == line.rstrip():
+            pass
+        if '4' == line.rstrip():
             server.getClients()
         print(menu_message)
     print('Exit')
