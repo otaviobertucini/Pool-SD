@@ -3,14 +3,11 @@ import threading
 import sys
 
 # chave https://medium.com/@jonathas.mpf/assinatura-digital-com-python-d03df25116fb
-# from Crypto.Hash import SHA256
-# from Crypto.PublicKey import RSA
-# from Crypto import Random
+from Crypto.Hash import SHA256
+from Crypto.PublicKey import RSA
+from Crypto import Random3
 
 Running = True
-# random_seed = Random.new().read
-# keyPair = RSA.generate(1024, random_seed)
-# pubKey = keyPair.publickey()
 
 menu_message = '\nDigite 1 para cadastrar enquete\nDigite 2 para votar em uma enquete\nDigite 3 para mostrar resultado de enquete'
 
@@ -48,6 +45,13 @@ class Client(object):
         # thread->requestLoop do callback
         print('callback()')
 
+    def pollVote(self, server, userName):
+
+        title = input('Digite o nome da enquete: ')
+        chosenDates = input('Escolha a melhor data: ')
+
+        server.pollVote(userName, title, chosenDates)
+
 def main():
 
     # obtém a referência da aplicação do server no serviço de nomes
@@ -67,7 +71,12 @@ def main():
     thread.daemon = False
     thread.start()
     userName = input('Nome do usuário: ')
-    server.register(client_uri, userName, None)
+
+    random_seed = Random.new().read
+    keyPair = RSA.generate(1024, random_seed)
+    pubKey = keyPair.publickey()
+    
+    server.register(client_uri, userName, pubKey)
     print('Usuário criado: ' + str(userName))
     print(menu_message)
     for line in sys.stdin:
@@ -78,7 +87,7 @@ def main():
         if '1' == line.rstrip():
             callback.newPoll(server, userName)
         if '2' == line.rstrip():
-            pass
+            callback.pollVote(server, userName)
         if '3' == line.rstrip():
             pass
         if '4' == line.rstrip():

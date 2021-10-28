@@ -1,12 +1,20 @@
 import Pyro4
 import threading
+import re
 from datetime import datetime, timedelta
 # configura uma instância única do servidor para ser consumida por diversos
 # clientes
 
-@Pyro4.expose
-@Pyro4.behavior(instance_mode="single")
 
+def str2Date(date):
+
+    return datetime.strptime(date, '%d/%m/%y %H:%M:%S')
+
+def parseSuggestions(suggestions):
+
+    exp = re.compile(' {0,}, {0,}')
+
+    return re.sub(exp, ',', suggestions)
 
 class Poll:
 
@@ -15,6 +23,9 @@ class Poll:
     dueDate = ''
     place = ''
     suggestions = []
+    opened = True
+    voteCount = 0
+    subscribers = []
 
     def __init__(self, title, owner, dueDate, place, suggestions):
 
@@ -41,6 +52,9 @@ class ClientInstance:
 
     def getReference(self):
         return self.referece
+        
+@Pyro4.expose
+@Pyro4.behavior(instance_mode="single")
 class Server(object):
 
     clients = []
@@ -50,6 +64,14 @@ class Server(object):
 
     def __init__(self):
         self.startDate = datetime.now() + timedelta(seconds=5)
+
+    def getUser(self, userName):
+        for client in self.clients:
+            if client.getName() == userName:
+                return client
+
+        raise Exception('Usuário não encontrado!')
+        
 
     #coesão e desacoplamento------------------------       MÃO DO SIMÃO
     def runServer(self):                              #$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -66,24 +88,17 @@ class Server(object):
     @Pyro4.expose    
     def newPoll(self, clientName, title, place, suggestions, dueDate):
         
-        owner = None
-        for client in self.clients:
+        owner = self.getUser(clientName)
 
-            if client.getName() == clientName:
-                owner = client
-                break
-        
-        
-        if owner is None:
-            print('Usuário não encontrado!')
-            return
+        # date_time_obj = datetime. strptime(date_time_str, '%d/%m/%y %H:%M:%S')
 
+        # 26/10/2021 10:00:00,26/10/2021 10:00:00,26/10/2021 10:00:00,     26/10/2021 10:00:00
 
-        poll = Poll(title, owner, dueDate, place, suggestions.replace(r' {0,}, {0,}', ',').split(','))
+        poll = Poll(title, owner, dueDate, place, parseSuggestions(suggestions))
         self.polls.append(poll)
 
         for client in self.clients:
-            client.getReference().notification(title, suggestions.replace(r' {0,}, {0,}', ',').split(','))
+            client.getReference().notification(title, parseSuggestions(suggestions))
 
     @Pyro4.expose
     def test(self):                                 
@@ -92,6 +107,9 @@ class Server(object):
 
     @Pyro4.expose
     def register(self, uri, name, key):
+
+        user = 
+
         # registra usuário, passa chave e referência do cliente
         client = Pyro4.Proxy(uri)
 
@@ -110,6 +128,17 @@ class Server(object):
         for client in self.clients:
 
             print('oie: ' + client.name)
+
+    def pollVote(self, userName, title, chosenDates):
+        print('O usuário ' + userName + ' votou na enquete ' + title + 'escolhendo: ' + str(chosenDates))
+
+        user = self.getUser(userName)
+
+        print('ACHEI: ' + str)
+
+
+    def closePoll(self, poll):
+        pass
 
     def checkDueDate(self):
 
