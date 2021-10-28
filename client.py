@@ -5,7 +5,7 @@ import sys
 # chave https://medium.com/@jonathas.mpf/assinatura-digital-com-python-d03df25116fb
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
-from Crypto import Random3
+from Crypto import Random
 
 Running = True
 
@@ -15,7 +15,7 @@ menu_message = '\nDigite 1 para cadastrar enquete\nDigite 2 para votar em uma en
 @Pyro4.callback
 class Client(object):
 
-    count = 1
+    count = 0
 
     @Pyro4.expose
     def notification(self, poll, suggestions):
@@ -24,14 +24,15 @@ class Client(object):
 
     def newPoll(self, server, userName):
         # cliente preenche nome, título, local e data da reunião e data limite para votação
-        # clientName = input('Digite o nome do cliente: ')
-        # title = input('Digite o nome da enquete/reunião: ')
-        # place = input('Digite o local da reunião: ')
-        # suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
-        # dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
+        #clientName = input('Digite o nome do cliente: ')
+        title = input('Digite o nome da enquete/reunião: ')
+        place = input('Digite o local da reunião: ')
+        suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
+        dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
         # chama o método do server passando as informações necessárias para criar nova enquete no servidor
         # server.newPoll(clientName, title, place, suggestions, dueDate)
-        server.newPoll(userName, 'hu3' + str(self.count), 'montanha', '26/10/2021 10:00', '26/10/2021 21:00')
+        #server.newPoll(userName, 'hu3' + str(self.count), 'montanha', '26/10/2021 10:00', '26/10/2021 21:00')
+        server.newPoll(userName, title, place, suggestions, dueDate)
         self.count = self.count + 1
 
     def loopThread(daemon):
@@ -41,16 +42,18 @@ class Client(object):
         # print('aisjdiasjdj')
         daemon.requestLoop(lambda: Running)
 
-    def callBackLoopThread(objetc):
+    def callBackLoopThread(object):
         # thread->requestLoop do callback
         print('callback()')
 
     def pollVote(self, server, userName):
 
         title = input('Digite o nome da enquete: ')
-        chosenDates = input('Escolha a melhor data: ')
+        #chamar server.getSuggestions
+        print(server.getPollSuggestions(title))
+        chosenDate = input('Escolha a melhor data: ')
 
-        server.pollVote(userName, title, chosenDates)
+        server.pollVote(userName, title, chosenDate)
 
 def main():
 
@@ -60,7 +63,7 @@ def main():
     server = Pyro4.Proxy(uri)
     # ... server.metodo() —> invoca método no server
     # Inicializa o Pyro daemon e registra o objeto Pyro callback nele.
-    server.test()
+    #server.test()
     daemon = Pyro4.core.Daemon()
     callback = Client()
     client_uri = daemon.register(callback)

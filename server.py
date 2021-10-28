@@ -2,6 +2,8 @@ import Pyro4
 import threading
 import re
 from datetime import datetime, timedelta
+
+from Pyro4.core import expose
 # configura uma instância única do servidor para ser consumida por diversos
 # clientes
 
@@ -16,6 +18,7 @@ def parseSuggestions(suggestions):
 
     return re.sub(exp, ',', suggestions)
 
+@Pyro4.expose
 class Poll:
 
     title = ''
@@ -24,7 +27,7 @@ class Poll:
     place = ''
     suggestions = []
     opened = True
-    voteCount = 0
+    voteCounter = 0
     subscribers = []
 
     def __init__(self, title, owner, dueDate, place, suggestions):
@@ -34,6 +37,21 @@ class Poll:
         self.dueDate = dueDate
         self.place = place
         self.suggestions = suggestions
+
+    def getTitle(self):
+        return self.title
+
+    #método para mostrar as opções de datas/horários para votação
+        
+    def getSuggestions(self):
+        # i = 1
+        for suggestion in self.suggestions:
+            print(suggestion)
+            # i += 1
+        # print('ENTROU NO GETsUGGESTIONS')    
+        # for index in range(len(self.suggestions)):
+        #     print(index + 1, self.suggestions[index], end = '\n')    
+        # print('SAIU NO GETsUGGESTIONS')
 
 class ClientInstance:
 
@@ -70,7 +88,7 @@ class Server(object):
     def getUser(self, userName):
         for client in self.clients:
             if client.getName() == userName:
-                return client
+                return client.getName()
 
         raise Exception('Usuário não encontrado!')
         
@@ -96,12 +114,20 @@ class Server(object):
         self.polls.append(poll)
 
         for client in self.clients:
-            client.getReference().notification(title, parseSuggestions(suggestions))
+            client.getReference().notification(title, parseSuggestions(suggestions))            
 
-    @Pyro4.expose
-    def test(self):                                 
-
-        print("Não sei de nada")
+    def getPollSuggestions(self, title):
+        print('ENTROU NO GETpOLLsUGGESTIONS')
+        print(title)
+        for poll in self.polls:
+            print(poll.getTitle)
+            if poll.getTitle() == title:
+                poll.getSuggestions()
+        print('SAIU NO GETpOLLsUGGESTIONS')
+        return poll.getSuggestions()
+    # @Pyro4.expose
+    # def test(self):                                 
+    #     print("Não sei de nada")
 
     @Pyro4.expose
     def register(self, uri, name, key):
@@ -115,10 +141,12 @@ class Server(object):
         self.clients.append(instance)    
 
         print('Usuário ' + name + ' criado com sucesso!') 
+        print(client)
+        print(key)
 
-    def pollResquest(self):
-        # chamar método do cliente para avisar nova enquete
-        print('nada')
+    # def pollResquest(self):
+    #     # chamar método do cliente para avisar nova enquete
+    #     print('nada')
 
     @Pyro4.expose
     def getClients(self):
@@ -127,12 +155,11 @@ class Server(object):
 
             print('oie: ' + client.name)
 
-    def pollVote(self, userName, title, chosenDates):
-        print('O usuário ' + userName + ' votou na enquete ' + title + 'escolhendo: ' + str(chosenDates))
-
-        user = self.getUser(userName)
-
-        print('ACHEI: ' + str)
+    def pollVote(self, userName, title, chosenDate):
+        print('O usuário ' + userName + ' votou na enquete ' + title + ' escolhendo: ' + str(chosenDate))
+        # user = self.getUser(userName)
+        # print(user)
+        # print('ACHEI: ')
 
 
     def closePoll(self, poll):
