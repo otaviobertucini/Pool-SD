@@ -40,12 +40,14 @@ class ClientInstance:
     name = ''
     referece = ''
     publicKey = ''
+    uri = ''
 
-    def __init__(self, name, reference, key):
+    def __init__(self, name, reference, key, uri):
 
         self.name = name
         self.referece = reference
         self.publicKey = key
+        self.uri = uri
 
     def getName(self):
         return self.name
@@ -90,10 +92,6 @@ class Server(object):
         
         owner = self.getUser(clientName)
 
-        # date_time_obj = datetime. strptime(date_time_str, '%d/%m/%y %H:%M:%S')
-
-        # 26/10/2021 10:00:00,26/10/2021 10:00:00,26/10/2021 10:00:00,     26/10/2021 10:00:00
-
         poll = Poll(title, owner, dueDate, place, parseSuggestions(suggestions))
         self.polls.append(poll)
 
@@ -108,12 +106,12 @@ class Server(object):
     @Pyro4.expose
     def register(self, uri, name, key):
 
-        user = 
+        # user = 
 
         # registra usuário, passa chave e referência do cliente
         client = Pyro4.Proxy(uri)
 
-        instance = ClientInstance(name, client, key)
+        instance = ClientInstance(name, client, key, uri)
         self.clients.append(instance)    
 
         print('Usuário ' + name + ' criado com sucesso!') 
