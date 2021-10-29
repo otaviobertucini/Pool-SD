@@ -23,35 +23,48 @@ class Poll:
 
     title = ''
     owner = None
-    dueDate = ''
+    dueDate = None
     place = ''
     suggestions = []
+    voteCount = []
     opened = True
-    voteCounter = 0
     subscribers = []
 
     def __init__(self, title, owner, dueDate, place, suggestions):
 
         self.title = title
         self.owner = owner
-        self.dueDate = dueDate
+        self.dueDate = datetime.now() + timedelta(seconds=10)
         self.place = place
         self.suggestions = suggestions
+        self.voteCount = [0] * len(suggestions)
 
     def getTitle(self):
         return self.title
-
-    #método para mostrar as opções de datas/horários para votação
         
     def getSuggestions(self):
-        # i = 1
-        for suggestion in self.suggestions:
-            print(suggestion)
-            # i += 1
-        # print('ENTROU NO GETsUGGESTIONS')    
-        # for index in range(len(self.suggestions)):
-        #     print(index + 1, self.suggestions[index], end = '\n')    
-        # print('SAIU NO GETsUGGESTIONS')
+        return self.suggestions
+
+    def receiveVote(self, index, subscriber):
+        self.subscribers.append(subscriber)
+        self.voteCount[index] = self.voteCount[index] + 1
+
+    def closePoll(self):
+
+        print('ENTREEEEEEE')
+
+        if(not self.opened):
+            return
+
+        self.opened = False
+
+        winner = self.suggestions[self.suggestions.index(max(self.suggestions))]
+
+        for subscriber in self.subscribers:
+            print('ENTREEEEEEE2')
+            subscriber.getReference().closedPoll(self.title, winner)
+        if self.owner not in self.subscribers:
+            self.owner.getReference().closedPoll(self.title, winner)
 
 class ClientInstance:
 
@@ -66,6 +79,9 @@ class ClientInstance:
         self.referece = reference
         self.publicKey = key
         self.uri = uri
+
+    def getUri(self):
+        return self.uri
 
     def getName(self):
         return self.name
@@ -83,14 +99,21 @@ class Server(object):
     startDate = None
 
     def __init__(self):
-        self.startDate = datetime.now() + timedelta(seconds=5)
+        self.startDate = datetime.now() + timedelta(seconds=15)
 
-    def getUser(self, userName):
+    def getUser(self, uri):
         for client in self.clients:
-            if client.getName() == userName:
-                return client.getName()
+            if client.getUri() == uri:
+                return client
 
         raise Exception('Usuário não encontrado!')
+
+    def getPoll(self, title):
+        for poll in self.polls:
+            if poll.getTitle() == title:
+                return poll
+        
+        raise Exception('Enquete não encontrado!')
         
 
     #coesão e desacoplamento------------------------       MÃO DO SIMÃO
@@ -106,47 +129,34 @@ class Server(object):
                                                       #$$$$$$$$$$$.'   $$$$$$$$$
 
     @Pyro4.expose    
-    def newPoll(self, clientName, title, place, suggestions, dueDate):
+    def newPoll(self, uri, title, place, suggestions, dueDate):
         
-        owner = self.getUser(clientName)
+        owner = self.getUser(uri)
 
-        poll = Poll(title, owner, dueDate, place, parseSuggestions(suggestions))
+        suggestions = parseSuggestions(suggestions).split(',')
+
+        poll = Poll(title, owner, dueDate, place, suggestions)
         self.polls.append(poll)
 
         for client in self.clients:
-            client.getReference().notification(title, parseSuggestions(suggestions))            
+            client.getReference().notification(title, suggestions)            
 
     def getPollSuggestions(self, title):
-        print('ENTROU NO GETpOLLsUGGESTIONS')
-        print(title)
-        for poll in self.polls:
-            print(poll.getTitle)
-            if poll.getTitle() == title:
-                poll.getSuggestions()
-        print('SAIU NO GETpOLLsUGGESTIONS')
-        return poll.getSuggestions()
-    # @Pyro4.expose
-    # def test(self):                                 
-    #     print("Não sei de nada")
+
+        poll = self.getPoll(title)
+        if(poll.opened):
+            return poll.getSuggestions()
+        return False
 
     @Pyro4.expose
     def register(self, uri, name, key):
 
-        # user = 
-
-        # registra usuário, passa chave e referência do cliente
         client = Pyro4.Proxy(uri)
 
         instance = ClientInstance(name, client, key, uri)
         self.clients.append(instance)    
 
         print('Usuário ' + name + ' criado com sucesso!') 
-        print(client)
-        print(key)
-
-    # def pollResquest(self):
-    #     # chamar método do cliente para avisar nova enquete
-    #     print('nada')
 
     @Pyro4.expose
     def getClients(self):
@@ -155,21 +165,32 @@ class Server(object):
 
             print('oie: ' + client.name)
 
-    def pollVote(self, userName, title, chosenDate):
-        print('O usuário ' + userName + ' votou na enquete ' + title + ' escolhendo: ' + str(chosenDate))
-        # user = self.getUser(userName)
-        # print(user)
-        # print('ACHEI: ')
+    def pollVote(self, uri, title, chosenDate):
+        user = self.getUser(uri)
 
+        poll = self.getPoll(title)
 
-    def closePoll(self, poll):
-        pass
+        if(not poll.opened):
+            print('Enquete encerrada!')
+            return
+        
+        index = int(chosenDate) - 1
+
+        poll.receiveVote(index, user)
+
+        print('O usuário ' + user.getName() + ' votou na enquete ' + title + ' escolhendo: ' + poll.suggestions[index])
+
+        if(sum(poll.voteCount) == len(self.clients)):
+            poll.closePoll()
 
     def checkDueDate(self):
 
         while True:
-            if(self.startDate < datetime.now()):
-                print('passei!')
+            for poll in self.polls:
+                if(datetime.now() >= poll.dueDate):
+                    if(poll.opened):
+                        poll.closePoll()
+
 
 def main():
     server = Server()

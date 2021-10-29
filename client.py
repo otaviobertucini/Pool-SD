@@ -15,25 +15,26 @@ menu_message = '\nDigite 1 para cadastrar enquete\nDigite 2 para votar em uma en
 @Pyro4.callback
 class Client(object):
 
-    count = 0
-
     @Pyro4.expose
     def notification(self, poll, suggestions):
         print("Nova enquete recebida: " + str(poll))
 
+    def closedPoll(self, pollName, chosenDate):
+        print('A enquete ' + pollName + ' foi encerrada!')
+        print('A data e horário escolhidos foram: ' + chosenDate)
 
-    def newPoll(self, server, userName):
+
+    def newPoll(self, server, uri):
         # cliente preenche nome, título, local e data da reunião e data limite para votação
         #clientName = input('Digite o nome do cliente: ')
         title = input('Digite o nome da enquete/reunião: ')
-        place = input('Digite o local da reunião: ')
-        suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
-        dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
+        # place = input('Digite o local da reunião: ')
+        # suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
+        # dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
         # chama o método do server passando as informações necessárias para criar nova enquete no servidor
         # server.newPoll(clientName, title, place, suggestions, dueDate)
-        #server.newPoll(userName, 'hu3' + str(self.count), 'montanha', '26/10/2021 10:00', '26/10/2021 21:00')
-        server.newPoll(userName, title, place, suggestions, dueDate)
-        self.count = self.count + 1
+        server.newPoll(uri, title, 'montanha', '28/10/2021 10:00:00,28/10/2021 11:00:00 , 28/10/2021 12:00:00', '28/10/2021 21:00')
+        # server.newPoll(uri, title, place, suggestions, dueDate)
 
     def loopThread(daemon):
         # thread para ficar escutando chamadas de método do server
@@ -46,14 +47,22 @@ class Client(object):
         # thread->requestLoop do callback
         print('callback()')
 
-    def pollVote(self, server, userName):
+    def pollVote(self, server, uri):
 
         title = input('Digite o nome da enquete: ')
-        #chamar server.getSuggestions
-        print(server.getPollSuggestions(title))
+        suggestions =  server.getPollSuggestions(title)
+
+        if(suggestions == False):
+            print('Não é possível votar. Enquete encerrada.')
+            return
+
+        for index, suggestion in enumerate(suggestions):
+            print(index + 1, suggestion)
+
         chosenDate = input('Escolha a melhor data: ')
 
-        server.pollVote(userName, title, chosenDate)
+        server.pollVote(uri, title, chosenDate)
+
 
 def main():
 
@@ -88,9 +97,9 @@ def main():
             Running = False
             break
         if '1' == line.rstrip():
-            callback.newPoll(server, userName)
+            callback.newPoll(server, client_uri)
         if '2' == line.rstrip():
-            callback.pollVote(server, userName)
+            callback.pollVote(server, client_uri)
         if '3' == line.rstrip():
             pass
         if '4' == line.rstrip():
