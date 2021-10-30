@@ -1,6 +1,7 @@
 import Pyro4
 import threading
 import sys
+from datetime import datetime, timedelta
 
 # chave https://medium.com/@jonathas.mpf/assinatura-digital-com-python-d03df25116fb
 from Crypto.Hash import SHA256
@@ -33,14 +34,10 @@ class Client(object):
         # dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
         # chama o método do server passando as informações necessárias para criar nova enquete no servidor
         # server.newPoll(clientName, title, place, suggestions, dueDate)
-        server.newPoll(uri, title, 'montanha', '28/10/2021 10:00:00,28/10/2021 11:00:00 , 28/10/2021 12:00:00', '28/10/2021 21:00')
+        server.newPoll(uri, title, 'montanha', '28/10/2021 10:00:00,28/10/2021 11:00:00 , 28/10/2021 12:00:00', datetime.strftime(datetime.now() + timedelta(seconds=2), '%d/%m/%y %H:%M:%S'))
         # server.newPoll(uri, title, place, suggestions, dueDate)
 
     def loopThread(daemon):
-        # thread para ficar escutando chamadas de método do server
-        # print('Menu')
-        # print(menu_message)
-        # print('aisjdiasjdj')
         daemon.requestLoop(lambda: Running)
 
     def callBackLoopThread(object):

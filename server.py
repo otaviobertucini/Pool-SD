@@ -34,10 +34,11 @@ class Poll:
 
         self.title = title
         self.owner = owner
-        self.dueDate = datetime.now() + timedelta(seconds=10)
+        self.dueDate = dueDate
         self.place = place
         self.suggestions = suggestions
         self.voteCount = [0] * len(suggestions)
+        self.subscribers = []
 
     def getTitle(self):
         return self.title
@@ -51,17 +52,17 @@ class Poll:
 
     def closePoll(self):
 
-        print('ENTREEEEEEE')
-
         if(not self.opened):
             return
 
         self.opened = False
 
-        winner = self.suggestions[self.suggestions.index(max(self.suggestions))]
+        winner = self.suggestions[self.voteCount.index(max(self.voteCount))]
+
+        print(self.subscribers)
+        print(len(self.subscribers))
 
         for subscriber in self.subscribers:
-            print('ENTREEEEEEE2')
             subscriber.getReference().closedPoll(self.title, winner)
         if self.owner not in self.subscribers:
             self.owner.getReference().closedPoll(self.title, winner)
@@ -135,7 +136,7 @@ class Server(object):
 
         suggestions = parseSuggestions(suggestions).split(',')
 
-        poll = Poll(title, owner, dueDate, place, suggestions)
+        poll = Poll(title, owner, str2Date(dueDate), place, suggestions)
         self.polls.append(poll)
 
         for client in self.clients:
@@ -195,9 +196,9 @@ class Server(object):
 def main():
     server = Server()
 
-    # thread = threading.Thread(target=server.checkDueDate)
-    # thread.daemon = True
-    # thread.start()
+    thread = threading.Thread(target=server.checkDueDate)
+    thread.daemon = True
+    thread.start()
     
     server.runServer()
 
