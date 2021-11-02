@@ -1,9 +1,9 @@
+# chave https://medium.com/@jonathas.mpf/assinatura-digital-com-python-d03df25116fb
+
 import Pyro4
 import threading
 import sys
 from datetime import datetime, timedelta
-
-# chave https://medium.com/@jonathas.mpf/assinatura-digital-com-python-d03df25116fb
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto import Random
@@ -15,7 +15,6 @@ menu_message = '\nDigite 1 para cadastrar enquete\nDigite 2 para votar em uma en
 @Pyro4.expose
 @Pyro4.callback
 class Client(object):
-
     @Pyro4.expose
     def notification(self, poll, suggestions):
         print("Nova enquete recebida: " + str(poll))
@@ -23,7 +22,6 @@ class Client(object):
     def closedPoll(self, pollName, chosenDate):
         print('A enquete ' + pollName + ' foi encerrada!')
         print('A data e horário escolhidos foram: ' + chosenDate)
-
 
     def newPoll(self, server, uri):
         # cliente preenche nome, título, local e data da reunião e data limite para votação
@@ -34,7 +32,7 @@ class Client(object):
         # dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
         # chama o método do server passando as informações necessárias para criar nova enquete no servidor
         # server.newPoll(clientName, title, place, suggestions, dueDate)
-        server.newPoll(uri, title, 'montanha', '28/10/2021 10:00:00,28/10/2021 11:00:00 , 28/10/2021 12:00:00', datetime.strftime(datetime.now() + timedelta(seconds=2), '%d/%m/%y %H:%M:%S'))
+        server.newPoll(uri, title, 'montanha', '28/10/2021 10:00:00,28/10/2021 11:00:00 , 28/10/2021 12:00:00', datetime.strftime(datetime.now() + timedelta(seconds=50), '%d/%m/%y %H:%M:%S'))
         # server.newPoll(uri, title, place, suggestions, dueDate)
 
     def loopThread(daemon):
@@ -60,6 +58,24 @@ class Client(object):
 
         server.pollVote(uri, title, chosenDate)
 
+    def checkPoll(self, server, clientUri, keyPair):
+
+        pollName = input('Digite o nome do evento: ')
+        #haseia o pollName e gera o digitalSign através do keyPair.sign()
+
+        hashA = SHA256.new(pollName.encode('utf-8')).digest() 
+        digitalSign = keyPair.sign(hashA, '') 
+        response = server.checkPoll(clientUri, pollName, digitalSign)
+
+        if(response['error']):
+            print(response['message'])
+            return
+
+        poll = response['data']
+        print('Consulta realizada com sucesso!')
+        #tá dando cagada nos dados de retorno - tô com sono
+        # print('A enquete ', poll.name, ' possuí ', poll.voteCount, ' votos.')
+
 
 def main():
 
@@ -72,7 +88,7 @@ def main():
     #server.test()
     daemon = Pyro4.core.Daemon()
     callback = Client()
-    client_uri = daemon.register(callback)
+    clientUri = daemon.register(callback)
     # loopThread = callback.loopThread
     callback.callBackLoopThread()
     # inicializa a thread para receber notificações do server
@@ -84,8 +100,10 @@ def main():
     random_seed = Random.new().read
     keyPair = RSA.generate(1024, random_seed)
     pubKey = keyPair.publickey()
+
     
-    server.register(client_uri, userName, pubKey)
+    
+    server.register(clientUri, userName, pubKey)
     print('Usuário criado: ' + str(userName))
     print(menu_message)
     for line in sys.stdin:
@@ -94,11 +112,11 @@ def main():
             Running = False
             break
         if '1' == line.rstrip():
-            callback.newPoll(server, client_uri)
+            callback.newPoll(server, clientUri)
         if '2' == line.rstrip():
-            callback.pollVote(server, client_uri)
+            callback.pollVote(server, clientUri)
         if '3' == line.rstrip():
-            pass
+            callback.checkPoll(server, clientUri, keyPair)
         if '4' == line.rstrip():
             server.getClients()
         print(menu_message)

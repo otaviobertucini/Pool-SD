@@ -6,12 +6,15 @@ random_seed = Random.new().read
 
 keyPair = RSA.generate(1024, random_seed)
 pubKey = keyPair.publickey() 
-
+print('pubkey')
+print(pubKey)
+print('pubkey')
 True_text = 'Hello Bob'
 Fake_text = 'Bye Bob'
 
-hashA = SHA256.new(True_text.encode('utf-8')).digest()
-digitalSign = keyPair.sign(hashA, '')
+##cliente gera e passa o hash para o server para consulta de enquete
+hashA = SHA256.new(True_text.encode('utf-8')).digest() 
+digitalSign = keyPair.sign(hashA, '') 
 
 print("HashA:" + repr(hashA) + "\n")
 print("Digital signature:" + repr(digitalSign) + "\n")
