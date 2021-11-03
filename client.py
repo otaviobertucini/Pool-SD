@@ -30,6 +30,7 @@ class Client(object):
         suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
         dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
         try:
+            #chama o método do servidor para cadastrar nova enquete
             server.newPoll(uri, title, place, suggestions, dueDate)
         except:
             print('Alguma coisa deu errado, tente novamente:')
@@ -55,14 +56,14 @@ class Client(object):
             print(index + 1, suggestion)
 
         chosenDate = input('Escolha a melhor data: ')
-
+        #chama o método do servidor para votar em uma enquete
         server.pollVote(uri, title, chosenDate)
 
     def checkPoll(self, server, clientUri, keyPair):
 
         pollName = input('Digite o nome do evento: ')
 
-        #haseia o pollName e gera o digitalSign através do keyPair.sign()
+        #Gera o HASH para o pollName e gera o digitalSign através do keyPair.sign()
         hashA = SHA256.new(pollName.encode('utf-8')).digest() 
         digitalSign = keyPair.sign(hashA, '') 
 
@@ -79,14 +80,17 @@ class Client(object):
         poll = response['data']
         print('Consulta realizada com sucesso!')
     
-        print('A enquete ', poll['name'], ' possuí ', sum(poll['voteCount']), ' votos.')
+        print('A enquete ', poll['name'], ' possui ', sum(poll['voteCount']), ' votos.')
+        
         if(poll['opened']):
             print('Enquete em andamento.')
         else:
             print('Enquete encerrada.')
+        
         print('Relação de votos: ')
         for index, suggestion in enumerate(poll['suggestions']):
             print(suggestion + ' tem ' + str(poll['voteCount'][index]) + ' votos.')
+        
         print('Usuários inscritos/votantes: ')
         for sub in poll['subscribers']:
             print(' - ' + sub)
@@ -101,11 +105,9 @@ def main():
     server = Pyro4.Proxy(uri)
     # ... server.metodo() —> invoca método no server
     # Inicializa o Pyro daemon e registra o objeto Pyro callback nele.
-    #server.test()
     daemon = Pyro4.core.Daemon()
     callback = Client()
     clientUri = daemon.register(callback)
-    # loopThread = callback.loopThread
     # inicializa a thread para receber notificações do server
     thread = threading.Thread(target=Client.loopThread, args=(daemon,))
     thread.daemon = False
@@ -117,6 +119,7 @@ def main():
     keyPair = RSA.generate(1024, random_seed)
     pubKey = keyPair.publickey()    
     
+    #cadastro usuário -> cada cliente deve informar seu nome, chave pública e sua referência de objeto remoto.
     ## envia a uri, nome e chave pública para o servidor
     server.register(clientUri, userName, pubKey)
     print('Usuário criado: ' + str(userName))

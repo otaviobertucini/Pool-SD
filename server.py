@@ -40,21 +40,27 @@ class Poll:
         return self.suggestions
 
     def receiveVote(self, index, subscriber):
+        #ao votar o usuário é inscrito na lista de votantes/interessados na enquete
         self.subscribers.append(subscriber)
+        #incrementa o voto para a opção selecionada
         self.voteCount[index] = self.voteCount[index] + 1
 
     def closePoll(self):
+        #se a enquete já foi encerrada retorna
         if(not self.opened):
             return
-        #se a enquete foi encerrada retorna o resultado da sugestão vencedora // em caso de empate escolhe por default aquela com menor índice
+        #Encerra a enquete e define a opçao vencedora// em caso de empate escolhe por default aquela com menor índice
         self.opened = False
         winner = self.suggestions[self.voteCount.index(max(self.voteCount))]
 
+        #envia mensagem aos inscritos/interessados o encerramento e resultado da enquete
         for subscriber in self.subscribers:
             subscriber.getReference().closedPoll(self.title, winner)
+        #se o proprietário não votou na própria enquete informa o resultado a partir da condição a seguir
         if self.owner not in self.subscribers:
             self.owner.getReference().closedPoll(self.title, winner)
 
+    #Método para retornar dados de consulta de enquete: nome da enquete, quantidade de votos, sugestões, condição(aberta ou encerrada) e inscritos/interessados
     def getData(self):
         return {
             'name': self.title,
@@ -139,6 +145,7 @@ class Server(object):
         poll = Poll(title, owner, str2Date(dueDate), place, suggestions)
         self.polls.append(poll)
        
+        #chamada de método cliente para notificação de nova enquete criada para todos os clientes inscritos até o momento
         for client in self.clients:
             client.getReference().notification(title, suggestions)            
 
@@ -153,6 +160,7 @@ class Server(object):
     def register(self, uri, name, key):
         client = Pyro4.Proxy(uri)
         instance = ClientInstance(name, client, key, uri)
+        #coloca o usuário na lista de usuários inscritos no servidor
         self.clients.append(instance)    
         print('Usuário ' + name + ' criado com sucesso!') 
 
@@ -171,6 +179,7 @@ class Server(object):
         if(sum(poll.voteCount) == len(self.clients)):
             poll.closePoll()
 
+    #Método chamado na thread para verificar data/horário de encerramento e encerrar enquete quando necessário
     def checkDueDate(self):
         while True:
             for poll in self.polls:
@@ -179,8 +188,8 @@ class Server(object):
                         poll.closePoll()
 
     def checkPoll(self, clientUri, pollName, signature):
-        ## hasheia o pollName
-        ## verifica com a signature e pubkey se eh valido
+        ## Gera HASh através do pollName
+        ## verifica com a signature e pubkey se a mensagem é original/valida ou não corrompida
         poll = self.getPoll(pollName)
         client = self.getUser(clientUri)
         pk = client.getPubKey()
