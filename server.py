@@ -6,27 +6,27 @@ from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto import Random
 from Pyro4.core import expose
-# configura uma instancia unica do servidor para ser consumida por diversos
-# clientes
-
+# configura uma instancia unica do servidor para ser consumida por diversos clientes
 # -*- coding: utf-8 -*-
 
+#formata o string para datetime no modelo descrito
 def str2Date(date):
+    return datetime.strptime(date, '%d/%m/%Y %H:%M:%S')
 
-    return datetime.strptime(date, '%d/%m/%y %H:%M:%S')
-
+#garante que não haja espaços excedentes na string
 def parseSuggestions(suggestions):
-
     exp = re.compile(' {0,}, {0,}')
-
     return re.sub(exp, ',', suggestions)
 
+#Classe que referencia enquetes e guarda os atributos nome da enquete, proprietário, data final,
+#local de reunião, sugestões de horário, quantidade de votos, flag para verificação de enquete
+#em andamento e usuários inscritos/votante
 @Pyro4.expose
 class Poll:
     def __init__(self, title = "", owner = None, dueDate = None, place = "", suggestions = [], opened = True, subscribers = []):
         self.title = title
         self.owner = owner
-        self.dueDate = datetime.now() + timedelta(seconds=10)
+        self.dueDate = dueDate
         self.place = place
         self.suggestions = suggestions
         self.voteCount = [0] * len(suggestions)
@@ -46,7 +46,7 @@ class Poll:
     def closePoll(self):
         if(not self.opened):
             return
-
+        #se a enquete foi encerrada retorna o resultado da sugestão vencedora // em caso de empate escolhe por default aquela com menor índice
         self.opened = False
         winner = self.suggestions[self.voteCount.index(max(self.voteCount))]
 
@@ -56,20 +56,26 @@ class Poll:
             self.owner.getReference().closedPoll(self.title, winner)
 
     def getData(self):
-
         return {
             'name': self.title,
-            'voteCount': sum(self.voteCount),
-            'suggestions': self.suggestions
+            'voteCount': self.voteCount,
+            'suggestions': self.suggestions,
+            'opened': self.opened,
+            'subscribers': [sub.getName() for sub in self.subscribers]
         }
 
-    #to com sono e essa parada não está funcionando
-    # def getSubscriber(self, sub):
-    #     for subscriber in subscribers:
-    #         if(subscriber == sub):
-    #             return True
-    #     return False
+    #Verifica se o usuário é votante da enquete indicada (self)
+    def isSubscriber(self, sub):
+        for subscriber in self.subscribers:
+            if(subscriber.getUri() == sub):
+                return True
+        return False
         
+
+#ClientInstance#
+#Classe que possibilita a criação de uma instância de cliente dentro do servidor para armazenar
+#nome, referência, chave pública e o código identificador do processo cliente (uri)
+
 class ClientInstance:
     def __init__(self, name = "", reference = "", key = "", uri = ""):
         self.name = name
@@ -89,6 +95,10 @@ class ClientInstance:
     def getReference(self):
         return self.referece
         
+
+#Server#
+#Classe que possibilita instanciar um objeto servidor na main e permite chamadas de métodos
+#em processos clientes
 @Pyro4.expose
 @Pyro4.behavior(instance_mode="single")
 class Server(object):
@@ -109,7 +119,6 @@ class Server(object):
                 return poll   
         raise Exception('Enquete nao encontrado!')
         
-
                                                       # coesão e desacoplamento
     def runServer(self):                                    # MÃO DO SIMÃO
         with Pyro4.Daemon() as daemon:                #$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -178,7 +187,7 @@ class Server(object):
         pubKey = RSA.construct((pk['n'], pk['e']))
         hash = SHA256.new(pollName.encode('utf-8')).digest()
 
-        if(pubKey.verify(hash, signature) and ((poll.owner.uri == clientUri))): #or (poll.getSubscriber(clientUri)))):
+        if pubKey.verify(hash, signature) and ((poll.owner.uri == clientUri) or (poll.isSubscriber(clientUri))):
             return {
                 'error': False,
                 'message': 'Deu boa',
@@ -191,25 +200,11 @@ class Server(object):
             'data': None
         }
 
-
-        # if(not pubKey.verify(hash, signature)):
-        #     return {
-        #         'error': True,
-        #         'message': 'Permissão negada!',
-        #         'data': None
-        #     }
-
-        
-        # # print(poll.owner.uri)
-        # # print(clientUri)
-
-        # return {
-        #     'error': False,
-        #     'message': 'Deu boa',
-        #     'data': poll.getData()
-        # }       
-        
-
+    
+#MAIN#
+#Instancia o objeto server da classe Server e chama o método que inicializa thread
+#do servidor que ficará aguardando requisições de clientes
+#Cria e inicializa thread que ficará checando o horário de encerramento da enquete
 def main():
     server = Server()
 

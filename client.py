@@ -25,27 +25,27 @@ class Client(object):
 
     def newPoll(self, server, uri):
         # cliente preenche nome, título, local e data da reunião e data limite para votação
-        #clientName = input('Digite o nome do cliente: ')
         title = input('Digite o nome da enquete/reunião: ')
-        # place = input('Digite o local da reunião: ')
-        # suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
-        # dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
-        # chama o método do server passando as informações necessárias para criar nova enquete no servidor
-        # server.newPoll(clientName, title, place, suggestions, dueDate)
-        server.newPoll(uri, title, 'montanha', '28/10/2021 10:00:00,28/10/2021 11:00:00 , 28/10/2021 12:00:00', datetime.strftime(datetime.now() + timedelta(seconds=50), '%d/%m/%y %H:%M:%S'))
-        # server.newPoll(uri, title, place, suggestions, dueDate)
+        place = input('Digite o local da reunião: ')
+        suggestions = input('Digite as opções de horário separ dos por vírgula no formato dd/mm/aaaa hh:mm:ss: ')
+        dueDate = input('Digite o prazo para encerramento da enquete no formato dd/mm/aaaa hh:mm:ss: ')
+        try:
+            server.newPoll(uri, title, place, suggestions, dueDate)
+        except:
+            print('Alguma coisa deu errado, tente novamente:')
+            return
 
     def loopThread(daemon):
         daemon.requestLoop(lambda: Running)
 
-    def callBackLoopThread(object):
-        # thread->requestLoop do callback
-        print('callback()')
-
     def pollVote(self, server, uri):
 
         title = input('Digite o nome da enquete: ')
-        suggestions =  server.getPollSuggestions(title)
+        try:
+            suggestions =  server.getPollSuggestions(title)
+        except:
+            print('Alguma coisa deu errado, tente novamente:')
+            return
 
         if(suggestions == False):
             print('Não é possível votar. Enquete encerrada.')
@@ -61,11 +61,16 @@ class Client(object):
     def checkPoll(self, server, clientUri, keyPair):
 
         pollName = input('Digite o nome do evento: ')
-        #haseia o pollName e gera o digitalSign através do keyPair.sign()
 
+        #haseia o pollName e gera o digitalSign através do keyPair.sign()
         hashA = SHA256.new(pollName.encode('utf-8')).digest() 
         digitalSign = keyPair.sign(hashA, '') 
-        response = server.checkPoll(clientUri, pollName, digitalSign)
+
+        try:
+            response = server.checkPoll(clientUri, pollName, digitalSign)
+        except:
+            print('Alguma coisa deu errado, tente novamente:')
+            return
 
         if(response['error']):
             print(response['message'])
@@ -73,8 +78,19 @@ class Client(object):
 
         poll = response['data']
         print('Consulta realizada com sucesso!')
-        #tá dando cagada nos dados de retorno - tô com sono
-        # print('A enquete ', poll.name, ' possuí ', poll.voteCount, ' votos.')
+    
+        print('A enquete ', poll['name'], ' possuí ', sum(poll['voteCount']), ' votos.')
+        if(poll['opened']):
+            print('Enquete em andamento.')
+        else:
+            print('Enquete encerrada.')
+        print('Relação de votos: ')
+        for index, suggestion in enumerate(poll['suggestions']):
+            print(suggestion + ' tem ' + str(poll['voteCount'][index]) + ' votos.')
+        print('Usuários inscritos/votantes: ')
+        for sub in poll['subscribers']:
+            print(' - ' + sub)
+
 
 
 def main():
@@ -90,22 +106,22 @@ def main():
     callback = Client()
     clientUri = daemon.register(callback)
     # loopThread = callback.loopThread
-    callback.callBackLoopThread()
     # inicializa a thread para receber notificações do server
     thread = threading.Thread(target=Client.loopThread, args=(daemon,))
     thread.daemon = False
     thread.start()
     userName = input('Nome do usuário: ')
 
+    ## gera as chave privada e pública do cliente
     random_seed = Random.new().read
     keyPair = RSA.generate(1024, random_seed)
-    pubKey = keyPair.publickey()
-
+    pubKey = keyPair.publickey()    
     
-    
+    ## envia a uri, nome e chave pública para o servidor
     server.register(clientUri, userName, pubKey)
     print('Usuário criado: ' + str(userName))
     print(menu_message)
+    ## aguarda as entradas do usuário
     for line in sys.stdin:
         if 'exit' == line.rstrip():
             global Running
