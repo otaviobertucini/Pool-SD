@@ -176,7 +176,8 @@ class Server(object):
         poll.receiveVote(index, user)
         print('O usuário ' + user.getName() + ' votou na enquete ' + title + ' escolhendo: ' + poll.suggestions[index])
        
-        if(sum(poll.voteCount) == len(self.clients)):
+        #verifica se todos já votaram para encerrar a enquete (total -1 porque o proprietário não vota)
+        if(sum(poll.voteCount) == len(self.clients)-1):
             poll.closePoll()
 
     #Método chamado na thread para verificar data/horário de encerramento e encerrar enquete quando necessário
