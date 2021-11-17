@@ -232,3 +232,5 @@ if __name__ == "__main__":
 
     pass
 
+## https://sairamkrish.medium.com/handling-server-send-events-with-python-fastapi-e578f3929af1
+
