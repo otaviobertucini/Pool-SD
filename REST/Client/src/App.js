@@ -12,14 +12,10 @@ function App() {
   // eventSource.onmessage = function (e) {
   // };
 
-  var source = new EventSource("{{ url_for('sse.stream') }}");
-  source.addEventListener('greeting', function (event) {
-    var data = JSON.parse(event.data);
-    alert("The server says " + data.message);
-  }, false);
-  source.addEventListener('error', function (event) {
-    alert("Failed to connect to event stream. Is Redis running?");
-  }, false);
+  var source = new EventSource("http://127.0.0.1:8000/");
+
+
+
 
   return <>Oi</>
 }

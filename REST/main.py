@@ -5,8 +5,9 @@ from Crypto import Random
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
 import time
-from flask import Flask, render_template
-from flask_sse import sse
+from fastapi import FastAPI, Request, APIRouter
+from sse_starlette.sse import EventSourceResponse
+import asyncio
 
 
 # from flask import Flask, render_template
@@ -206,54 +207,28 @@ class Server(object):
 hostName = "localhost"
 serverPort = 8001
 
+'''
+Get status as an event generator
+'''
+status_stream_delay = 5  # second
+status_stream_retry_timeout = 30000  # milisecond
 
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-    pass
+async def status_event_generator(request, param1):
+    yield {
+        "event": "update",
+        "retry": status_stream_retry_timeout,
+        "data": "oie"
+    }
+    
 
+app = APIRouter()
 
-class MyServer(BaseHTTPRequestHandler):
-
-    def do_GET(self):
-
-        print('THREAD: ' + threading.currentThread().getName())
-        # sse.publish({"message": datetime.datetime.now()}, type='publish')
-        # time.sleep(4)
-        if('image.jpg' in self.path):
-
-            pass
-
+@app.get("/")
+def read_root(request: Request):
+    event_generator = status_event_generator(request, 'a')
+    return EventSourceResponse(event_generator)
 
 if __name__ == "__main__":
-    webServer = ThreadedHTTPServer((hostName, serverPort), MyServer)
-    print("Server started http://%s:%s" % (hostName, serverPort))
 
-    app = Flask(__name__)
-    with app.app_context():
+    pass
 
-        # app.config["REDIS_URL"] = "redis://127.0.0.1:6379"
-        # app.register_blueprint(sse, url_prefix='/')
-
-        # sse.publish({"message": "Hello!"}, type='greeting')
-
-        app = Flask(__name__)
-        app.config["REDIS_URL"] = "redis://localhost"
-        app.register_blueprint(sse, url_prefix='/stream')
-
-
-        @app.route('/')
-        def index():
-            return render_template("index.html")
-
-
-        @app.route('/hello')
-        def publish_hello():
-            sse.publish({"message": "Hello!"}, type='greeting')
-            return "Message sent!"
-
-    try:
-        webServer.serve_forever()
-    except KeyboardInterrupt:
-        pass
-
-    webServer.server_close()
-    print("Server stopped.")
