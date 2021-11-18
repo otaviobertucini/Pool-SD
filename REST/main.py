@@ -8,11 +8,7 @@ import time
 from fastapi import FastAPI, Request, APIRouter
 from sse_starlette.sse import EventSourceResponse
 import asyncio
-
-
-# from flask import Flask, render_template
-# from flask_sse import sse
-# from apscheduler.schedulers.background import BackgroundScheduler
+import uvicorn
 
 
 # formata o string para datetime no modelo descrito
@@ -20,8 +16,6 @@ def str2Date(date):
     return datetime.strptime(date, '%d/%m/%Y %H:%M:%S')
 
 # garante que não haja espaços excedentes na string
-
-
 def parseSuggestions(suggestions):
     exp = re.compile(' {0,}, {0,}')
     return re.sub(exp, ',', suggestions)
@@ -29,8 +23,6 @@ def parseSuggestions(suggestions):
 # Classe que referencia enquetes e guarda os atributos nome da enquete, proprietário, data final,
 # local de reunião, sugestões de horário, quantidade de votos, flag para verificação de enquete
 # em andamento e usuários inscritos/votante
-
-
 class Poll:
     def __init__(self, title="", owner=None, dueDate=None, place="", suggestions=[], opened=True, subscribers=[]):
         self.title = title
@@ -203,34 +195,29 @@ class Server(object):
             'data': None
         }
 
-
 hostName = "localhost"
 serverPort = 8001
 
-'''
-Get status as an event generator
-'''
-status_stream_delay = 5  # second
-status_stream_retry_timeout = 30000  # milisecond
-
-async def status_event_generator(request, param1):
-    yield {
-        "event": "update",
-        "retry": status_stream_retry_timeout,
-        "data": "oie"
-    }
+async def status_event_generator(request):
+    count = 0
+    while True:
+        if await request.is_disconnected():
+            break
+        count += 1
+        yield count
+        time.sleep(5)
     
 
-app = APIRouter()
+app = FastAPI()
 
 @app.get("/")
 def read_root(request: Request):
-    event_generator = status_event_generator(request, 'a')
+    event_generator = status_event_generator(request)
     return EventSourceResponse(event_generator)
 
 if __name__ == "__main__":
 
-    pass
+   uvicorn.run(app, port=8000)
 
 ## https://sairamkrish.medium.com/handling-server-send-events-with-python-fastapi-e578f3929af1
 
