@@ -2,20 +2,22 @@ import React from 'react'
 
 function App() {
 
-  // var targetContainer = document.getElementById("this-div");
-  // var eventSource = new EventSource("https://localhost:8001");
-  // eventSource.addEventListener('greeting', function(event){
-  //     var data = JSON.parse(event.data);
-  //     alert(data)
-  // }, false);
-
-  // eventSource.onmessage = function (e) {
-  // };
-
   var source = new EventSource("http://127.0.0.1:8000/");
 
-
-
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open( "GET", 'http://127.0.0.1:8000/', true );
+  xmlHttp.onload = function () {
+    console.log('rsrs');
+  };
+  xmlHttp.send( null );
+  
+  source.addEventListener("update", function(event) {
+    console.log('rsrs ', event);
+  });
+  source.addEventListener("end", function(event) {
+      console.log('Handling end....')
+      source.close(); 
+  });
 
   return <>Oi</>
 }

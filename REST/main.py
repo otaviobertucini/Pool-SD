@@ -1,15 +1,10 @@
-import threading
 import re
 from datetime import datetime, timedelta
-from Crypto import Random
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from socketserver import ThreadingMixIn
-import time
 from fastapi import FastAPI, Request, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 import asyncio
 import uvicorn
-
 
 # formata o string para datetime no modelo descrito
 def str2Date(date):
@@ -198,26 +193,41 @@ class Server(object):
 hostName = "localhost"
 serverPort = 8001
 
+
+app = FastAPI() 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 async def status_event_generator(request):
     count = 0
     while True:
         if await request.is_disconnected():
             break
         count += 1
-        yield count
-        time.sleep(5)
+        yield {
+            "event": "update",
+            "data": count
+        }
+        await asyncio.sleep(0.9)
     
 
-app = FastAPI()
 
 @app.get("/")
 def read_root(request: Request):
+    asyncio.set_event_loop(asyncio.new_event_loop())
     event_generator = status_event_generator(request)
     return EventSourceResponse(event_generator)
 
 if __name__ == "__main__":
 
-   uvicorn.run(app, port=8000)
+
+    uvicorn.run(app, port=8000)
 
 ## https://sairamkrish.medium.com/handling-server-send-events-with-python-fastapi-e578f3929af1
 
