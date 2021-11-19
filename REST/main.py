@@ -7,10 +7,14 @@ import asyncio
 import uvicorn
 
 # formata o string para datetime no modelo descrito
+
+
 def str2Date(date):
     return datetime.strptime(date, '%d/%m/%Y %H:%M:%S')
 
 # garante que não haja espaços excedentes na string
+
+
 def parseSuggestions(suggestions):
     exp = re.compile(' {0,}, {0,}')
     return re.sub(exp, ',', suggestions)
@@ -18,6 +22,8 @@ def parseSuggestions(suggestions):
 # Classe que referencia enquetes e guarda os atributos nome da enquete, proprietário, data final,
 # local de reunião, sugestões de horário, quantidade de votos, flag para verificação de enquete
 # em andamento e usuários inscritos/votante
+
+
 class Poll:
     def __init__(self, title="", owner=None, dueDate=None, place="", suggestions=[], opened=True, subscribers=[]):
         self.title = title
@@ -78,19 +84,12 @@ class Poll:
 # Classe que possibilita a criação de uma instância de cliente dentro do servidor para armazenar
 # nome, referência, chave pública e o código identificador do processo cliente (uri)
 class ClientInstance:
-    def __init__(self, name="", reference="", uri=""):
+    def __init__(self, name="", reference=""):
         self.name = name
         self.referece = reference
-        self.uri = uri
-
-    def getUri(self):
-        return self.uri
-
-    def getName(self):
-        return self.name
-
-    def getReference(self):
-        return self.referece
+    
+    # def getClientName():
+        
 
 
 class Server(object):
@@ -99,11 +98,10 @@ class Server(object):
         self.polls = polls
         self.startDate = datetime.now() + timedelta(seconds=15)
 
-    def getUser(self, uri):
+    def getUser(self):
         for client in self.clients:
-            if client.getUri() == uri:
-                return client
-        raise Exception('Usuario nao encontrado!')
+            print(client) 
+        # raise Exception('Usuario nao encontrado!')
 
     def getPoll(self, title):
         for poll in self.polls:
@@ -141,9 +139,8 @@ class Server(object):
             return poll.getSuggestions()
         return False
 
-    def register(self, uri, name, key):
-        client = None
-        instance = ClientInstance(name, client, key, uri)
+    def register(self, name):
+        instance = ClientInstance(name)
         # coloca o usuário na lista de usuários inscritos no servidor
         self.clients.append(instance)
         print('Usuário ' + name + ' criado com sucesso!')
@@ -190,11 +187,15 @@ class Server(object):
             'data': None
         }
 
+
+app = FastAPI()
+
+
 hostName = "localhost"
 serverPort = 8001
 
+server = Server()
 
-app = FastAPI() 
 
 app.add_middleware(
     CORSMiddleware,
@@ -204,30 +205,36 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 async def status_event_generator(request):
     count = 0
     while True:
-        if await request.is_disconnected():
-            break
         count += 1
         yield {
             "event": "update",
             "data": count
         }
         await asyncio.sleep(0.9)
-    
 
+@app.get("/poll/user")
+def getUsers(request:Request):
+    return server.getUser()
 
-@app.get("/")
+@app.get("/poll")
 def read_root(request: Request):
     asyncio.set_event_loop(asyncio.new_event_loop())
     event_generator = status_event_generator(request)
     return EventSourceResponse(event_generator)
 
+@app.post("/poll")
+async def clientSubscribe(request: Request):
+    data = await request.json()
+
+    name = data['name']
+    server.register(name)
+    return data
+
 if __name__ == "__main__":
-
-
     uvicorn.run(app, port=8000)
 
-## https://sairamkrish.medium.com/handling-server-send-events-with-python-fastapi-e578f3929af1
-
+# https://sairamkrish.medium.com/handling-server-send-events-with-python-fastapi-e578f3929af1

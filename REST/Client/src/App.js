@@ -1,23 +1,31 @@
 import React from 'react'
 
+let HAS_LOADED = false;
+
 function App() {
 
-  var source = new EventSource("http://127.0.0.1:8000/");
+  if (!HAS_LOADED) {
 
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open( "GET", 'http://127.0.0.1:8000/', true );
-  xmlHttp.onload = function () {
-    console.log('rsrs');
-  };
-  xmlHttp.send( null );
-  
-  source.addEventListener("update", function(event) {
-    console.log('rsrs ', event);
-  });
-  source.addEventListener("end", function(event) {
-      console.log('Handling end....')
-      source.close(); 
-  });
+    HAS_LOADED = true;
+
+    const name = prompt('Digite o nome do cliente jahahahahaha')
+
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", 'http://127.0.0.1:8000/poll', true);
+    xmlHttp.setRequestHeader('Access-Control-Allow-Origin', '*')
+    xmlHttp.onload = function (event) {
+      console.log(event)
+      // Subscribe no SSE
+      var source = new EventSource("http://127.0.0.1:8000/poll");
+
+      source.addEventListener("update", function (event) {
+        console.log('rsrs ', event);
+      });
+    };
+    xmlHttp.send(JSON.stringify({
+      name
+    }));
+  }
 
   return <>Oi</>
 }
