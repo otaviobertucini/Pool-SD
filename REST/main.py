@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 import asyncio
 import uvicorn
+from sh import tail
 
 # formata o string para datetime no modelo descrito
 
@@ -205,16 +206,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+LOGFILE = './redis.txt'
 
 async def status_event_generator(request):
-    count = 0
     while True:
-        count += 1
-        yield {
-            "event": "update",
-            "data": count
-        }
-        await asyncio.sleep(0.9)
+        try:
+            print('ola')
+            line = tail("-f", LOGFILE, _iter=True)
+            # print('ola1.5')
+            # print('ola2', str(line))
+            # yield {
+            #     "event": "update",
+            #     "data": line
+            # }
+            yield line
+            print('ola3')
+        except:
+            print('bosta')
+        await asyncio.sleep(1)
+        print('ola4')
 
 @app.get("/poll/user")
 def getUsers(request:Request):
@@ -228,13 +238,15 @@ def read_root(request: Request):
 
 @app.post("/poll")
 async def clientSubscribe(request: Request):
+    print('fia da mae')
     data = await request.json()
+    print('fia da mae2')
 
     name = data['name']
+    print('fia da mae3')
     server.register(name)
+    print('fia da mae4')
     return data
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
-
-# https://sairamkrish.medium.com/handling-server-send-events-with-python-fastapi-e578f3929af1

@@ -14,11 +14,11 @@ function App() {
     xmlHttp.open("POST", 'http://127.0.0.1:8000/poll', true);
     xmlHttp.setRequestHeader('Access-Control-Allow-Origin', '*')
     xmlHttp.onload = function (event) {
-      console.log(event)
+      alert('Deu boa')
       // Subscribe no SSE
       var source = new EventSource("http://127.0.0.1:8000/poll");
 
-      source.addEventListener("update", function (event) {
+      source.onmessage("update", function (event) {
         console.log('rsrs ', event);
       });
     };
