@@ -6,6 +6,9 @@ from sse_starlette.sse import EventSourceResponse
 import asyncio
 import uvicorn
 from sh import tail
+import time
+import subprocess
+import select
 
 # formata o string para datetime no modelo descrito
 
@@ -98,6 +101,10 @@ class Server(object):
         self.clients = clients
         self.polls = polls
         self.startDate = datetime.now() + timedelta(seconds=15)
+
+    def getClientsNumber(self):
+
+        return len(self.clients)
 
     def getUser(self):
         for client in self.clients:
@@ -206,35 +213,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-LOGFILE = './redis.txt'
+logs = []
 
 async def status_event_generator(request):
+    
     while True:
-        try:
-            print('ola')
-            line = tail("-f", LOGFILE, _iter=True)
-            # print('ola1.5')
-            # print('ola2', str(line))
-            # yield {
-            #     "event": "update",
-            #     "data": line
-            # }
-            yield line
-            print('ola3')
-        except:
-            print('bosta')
-        await asyncio.sleep(1)
-        print('ola4')
+
+        print('ois')
+
+        if(len(logs) > 0):
+            data = logs.pop()
+
+            yield {
+                "event": "new",
+                "data" : data
+            }
+
+        await asyncio.sleep(2)
+
 
 @app.get("/poll/user")
 def getUsers(request:Request):
     return server.getUser()
 
 @app.get("/poll")
-def read_root(request: Request):
+async def read_root(request: Request):
     asyncio.set_event_loop(asyncio.new_event_loop())
     event_generator = status_event_generator(request)
     return EventSourceResponse(event_generator)
+
 
 @app.post("/poll")
 async def clientSubscribe(request: Request):
@@ -242,11 +249,13 @@ async def clientSubscribe(request: Request):
     data = await request.json()
     print('fia da mae2')
 
-    name = data['name']
-    print('fia da mae3')
-    server.register(name)
+    # name = data['name']
+    # print('fia da mae3' + str(data))
+    server.register('ela vem ela vai')
+    new = ['oie hahahahah'] * server.getClientsNumber()
+    logs.extend(new)
     print('fia da mae4')
-    return data
+    return 'oie'
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
