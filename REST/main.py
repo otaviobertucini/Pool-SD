@@ -221,12 +221,17 @@ async def status_event_generator(request):
 
         print('ois')
 
-        if(len(logs) > 0):
-            data = logs.pop()
+        # if(len(logs) > 0):
+        #     data = logs.pop()
+
+        file1 = open('redis.txt', 'r')
+        lines = file1.readlines()[-1]
+
+        if(not lines == 'tombstone'):
 
             yield {
                 "event": "new",
-                "data" : data
+                "data" : lines
             }
 
         await asyncio.sleep(2)
@@ -252,8 +257,11 @@ async def clientSubscribe(request: Request):
     # name = data['name']
     # print('fia da mae3' + str(data))
     server.register('ela vem ela vai')
-    new = ['oie hahahahah'] * server.getClientsNumber()
-    logs.extend(new)
+    # new = ['oie hahahahah'] * server.getClientsNumber()
+    # logs.extend(new)
+    
+    with open("redis.txt", "a") as myfile:
+        myfile.write("appended text")
     print('fia da mae4')
     return 'oie'
 
