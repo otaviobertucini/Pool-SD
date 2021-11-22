@@ -1,6 +1,7 @@
+from os import name
 import re
-from datetime import datetime, timedelta
-from fastapi import FastAPI, Request, APIRouter
+from datetime import date, datetime, timedelta
+from fastapi import FastAPI, Request, APIRouter, params
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 import asyncio
@@ -9,6 +10,8 @@ from sh import tail
 import time
 import subprocess
 import select
+
+from pydantic import BaseModel
 
 # formata o string para datetime no modelo descrito
 
@@ -215,16 +218,30 @@ app.add_middleware(
 
 logs = []
 
+
+
+# definir classes com modelos padrão para receber no body da api
+class Client(BaseModel):
+    name: str
+    reference: str
+
+class Poll2(BaseModel):
+    title: str
+    owner: str
+    suggestion: str
+
+
+
 async def status_event_generator(request):
     
     while True:
 
-        print('ois')
+        # print('ois')
 
         # if(len(logs) > 0):
         #     data = logs.pop()
 
-        file1 = open('redis.txt', 'r')
+        file1 = open('data/arch/redis.txt', 'r')
         lines = file1.readlines()[-1]
 
         if(not lines == 'tombstone'):
@@ -239,7 +256,8 @@ async def status_event_generator(request):
 
 @app.get("/poll/user")
 def getUsers(request:Request):
-    return server.getUser()
+    # return server.getUser()
+    return open('data/mock/user.json').readlines()
 
 @app.get("/poll")
 async def read_root(request: Request):
@@ -247,23 +265,38 @@ async def read_root(request: Request):
     event_generator = status_event_generator(request)
     return EventSourceResponse(event_generator)
 
+import json
 
-@app.post("/poll")
+@app.post("/poll/{clientName}")
 async def clientSubscribe(request: Request):
-    print('fia da mae')
-    data = await request.json()
-    print('fia da mae2')
-
+    # print('fia da mae')
+    # data = await request.json()
+    # print('fia da mae2')
     # name = data['name']
     # print('fia da mae3' + str(data))
-    server.register('ela vem ela vai')
+    payload = request.path_params
+    name = str(payload)
+    server.register(name)
     # new = ['oie hahahahah'] * server.getClientsNumber()
     # logs.extend(new)
     
-    with open("redis.txt", "a") as myfile:
-        myfile.write("appended text")
-    print('fia da mae4')
+    with open("data/arch/redis.txt", "a") as myfile:
+        myfile.write(name + '\n')
     return 'oie'
+
+
+@app.post("/new")
+def createPoll(poll: Poll2):
+    return(poll.owner + " criou enquete " + poll.title)
+
+class Item(BaseModel):
+    name: str
+    price: float
+    # is_offer: Optional[bool] = None
+
+@app.put("/items/{item_id}")
+def update_item(item_id: int, item: Item):
+    return {"item_name": item.name, "item_id": item_id}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
