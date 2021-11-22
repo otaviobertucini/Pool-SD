@@ -1,3 +1,9 @@
+{'event': 'register', 'data': {'name': 'Paula'}}
+{'event': 'register', 'data': {'name': 'a'}}
 tombstone
-nao tomb
+{'event': 'register', 'data': {'name': 'Paula'}}
+tombstone
+{'event': 'register', 'data': {'name': 'Paula'}}
+tombstone
+{'event': 'register', 'data': {'name': 'Paula'}}
 tombstone

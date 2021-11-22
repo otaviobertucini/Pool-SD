@@ -8,7 +8,7 @@ function App() {
     var source = new EventSource("http://127.0.0.1:8000/poll");
 
     source.addEventListener("new", (event) => {
-      console.log("rsrs ", event);
+      document.getElementById('main').append(JSON.stringify(event.data))
     });
   }
 
@@ -31,7 +31,9 @@ function App() {
     );
   }
 
-  return <>Oi</>;
+  return <div id="main">
+
+  </div>;
 }
 
 export default App;

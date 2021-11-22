@@ -97,10 +97,11 @@ class ClientInstance:
 
 
 class Server(object):
-    def __init__(self, clients=[], polls=[], startDate=None):
+    def __init__(self, clients=[], polls=[], startDate=None, redis = None):
         self.clients = clients
         self.polls = polls
         self.startDate = datetime.now() + timedelta(seconds=15)
+        self.redis = redis
 
     def getClientsNumber(self):
 
@@ -151,6 +152,12 @@ class Server(object):
         instance = ClientInstance(name)
         # coloca o usuário na lista de usuários inscritos no servidor
         self.clients.append(instance)
+        self.redis.append({
+            'event': 'register',
+            'data': {
+                'name': name
+            }
+        })
         print('Usuário ' + name + ' criado com sucesso!')
 
     def pollVote(self, uri, title, chosenDate):
@@ -195,6 +202,33 @@ class Server(object):
             'data': None
         }
 
+class Redis:
+
+    def __init__(self, filename):
+        
+        self.filename = filename
+
+    def pop(self):
+
+        with open(self.filename, "r") as file_read:
+
+            lines = file_read.readlines()[-1]
+
+            if('tombstone' in lines):
+
+                return None
+
+            with open(self.filename, "a") as file_write:
+
+                file_write.write("tombstone\n")
+
+            return lines
+
+    def append(self, data):
+
+        with open(self.filename, "a") as file:
+            file.write(str(data) + '\n')
+
 
 app = FastAPI()
 
@@ -202,8 +236,8 @@ app = FastAPI()
 hostName = "localhost"
 serverPort = 8001
 
-server = Server()
-
+redis = Redis('redis.txt')
+server = Server(redis=redis)
 
 app.add_middleware(
     CORSMiddleware,
@@ -219,19 +253,15 @@ async def status_event_generator(request):
     
     while True:
 
-        print('ois')
+        data = redis.pop()
 
-        # if(len(logs) > 0):
-        #     data = logs.pop()
+        if(not data is None):
 
-        file1 = open('redis.txt', 'r')
-        lines = file1.readlines()[-1]
-
-        if(not lines == 'tombstone'):
+            print('ola')
 
             yield {
                 "event": "new",
-                "data" : lines
+                "data" : str(data)
             }
 
         await asyncio.sleep(2)
@@ -250,20 +280,11 @@ async def read_root(request: Request):
 
 @app.post("/poll")
 async def clientSubscribe(request: Request):
-    print('fia da mae')
     data = await request.json()
-    print('fia da mae2')
+    name = data['name']
 
-    # name = data['name']
-    # print('fia da mae3' + str(data))
-    server.register('ela vem ela vai')
-    # new = ['oie hahahahah'] * server.getClientsNumber()
-    # logs.extend(new)
-    
-    with open("redis.txt", "a") as myfile:
-        myfile.write("appended text")
-    print('fia da mae4')
-    return 'oie'
+    server.register(name)
+    return name
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
