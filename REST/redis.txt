@@ -1,37 +1,99 @@
-{'event': 'register', 'data': {'name': 'mamaco'}}
-{'event': 'register', 'data': {'name': 'mamaco'}}
+{'event': 'register', 'data': {'name': 'ola mano'}}
 tombstone
+{'event': 'register', 'data': {'name': 'novo cliente'}}
 tombstone
-{'event': 'register', 'data': {'name': 'wine'}}
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
-tombstone
+{'event': 'register', 'data': {'name': 'main 1'}}
 tombstone
 {'event': 'register', 'data': {'name': 'a'}}
 tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+tombstone
+{'event': 'register', 'data': {'name': ']'}}
+tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+tombstone
+{'event': 'register', 'data': {'name': ''}}
+tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+tombstone
+{'event': 'register', 'data': {'name': ''}}
+tombstone
+{'event': 'register', 'data': {'name': ''}}
+tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+tombstone
+{'event': 'register', 'data': {'name': ''}}
+tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+tombstone
+{'event': 'register', 'data': {'name': ''}}
+{'event': 'register', 'data': {'name': ''}}
+tombstone
+{'event': 'register', 'data': {'name': ''}}
+tombstone
+{'event': 'register', 'data': {'name': 'A'}}
+tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+tombstone
+{'event': 'register', 'data': {'name': 'a'}}
+{'event': 'register', 'data': {'name': ''}}
+tombstone
+{'event': 'register', 'data': {'name': ''}}
+tombstone
+{'event': 'register', 'data': {'name': 'oi'}}
+tombstone
+{'event': 'register', 'data': {'name': 'tchau'}}
+tombstone
+{'event': 'register', 'data': {'name': ''}}
+tombstone
+{'event': 'register', 'data': {'name': 'novo cliente'}}
+tombstone
+{'event': 'register', 'data': {'name': None}}
+tombstone
 {'event': 'register', 'data': {'name': 'ola'}}
 tombstone
-{'event': 'register', 'data': {'name': 'merere'}}
+{'event': 'register', 'data': {'name': 'a'}}
 tombstone
-{'event': 'register', 'data': {'name': 'ola'}}
+{'event': 'register', 'data': {'name': ''}}
+{'event': 'register', 'data': {'name': 'a'}}
 tombstone
-{'event': 'register', 'data': {'name': 'terceiro'}}
+{'event': 'register', 'data': {'name': 'a'}}
 tombstone
-{'event': 'register', 'data': {'name': 'hola'}}
+{'event': 'register', 'data': {'name': ''}}
+{'event': 'register', 'data': {'name': ''}}
+{'event': 'register', 'data': {'name': ''}}
+{'event': 'register', 'data': {'name': 'semente'}}
+tombstone
+{'event': 'register', 'data': {'name': None}}
+{'event': 'register', 'data': {'name': 'wtf'}}
+tombstone
+{'event': 'register', 'data': {'name': 'bads meu'}}
+tombstone
+{'event': 'register', 'data': {'name': 'ta loco meu'}}
+tombstone
+{'event': 'register', 'data': {'name': 'bads meu'}}
+tombstone
+{'event': 'register', 'data': {'name': 'evento'}}
+tombstone
+{'event': 'register', 'data': {'name': 'bads meu'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'bads meu', 'name': 'evento', 'place': 'evento', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'bads meu'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'bads meu', 'name': 'evento', 'place': 'evento', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'bads meu'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'bads meu', 'name': 'evento', 'place': 'evento', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'o loki'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'bads meu', 'name': 'evento', 'place': 'evento', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
 tombstone
