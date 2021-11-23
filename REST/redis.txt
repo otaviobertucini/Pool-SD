@@ -1,9 +1,37 @@
-{'event': 'register', 'data': {'name': 'Paula'}}
+{'event': 'register', 'data': {'name': 'mamaco'}}
+{'event': 'register', 'data': {'name': 'mamaco'}}
+tombstone
+tombstone
+{'event': 'register', 'data': {'name': 'wine'}}
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
+tombstone
 {'event': 'register', 'data': {'name': 'a'}}
 tombstone
-{'event': 'register', 'data': {'name': 'Paula'}}
+{'event': 'register', 'data': {'name': 'ola'}}
 tombstone
-{'event': 'register', 'data': {'name': 'Paula'}}
+{'event': 'register', 'data': {'name': 'merere'}}
 tombstone
-{'event': 'register', 'data': {'name': 'Paula'}}
+{'event': 'register', 'data': {'name': 'ola'}}
+tombstone
+{'event': 'register', 'data': {'name': 'terceiro'}}
+tombstone
+{'event': 'register', 'data': {'name': 'hola'}}
 tombstone

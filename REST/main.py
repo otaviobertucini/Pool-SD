@@ -207,22 +207,41 @@ class Redis:
     def __init__(self, filename):
         
         self.filename = filename
+        self.last_message = None
+        self.sent_count = 0
 
-    def pop(self):
+    def pop(self, server: Server):
 
-        with open(self.filename, "r") as file_read:
+        data = None
+        if(self.last_message is None):
+            with open(self.filename, "r") as file_read:
 
-            lines = file_read.readlines()[-1]
+                self.last_message = file_read.readlines()[-1]
 
-            if('tombstone' in lines):
+                if('tombstone' in self.last_message):
+                    
+                    self.last_message = None
 
-                return None
+                    return None
+
+        self.sent_count += 1
+        data = self.last_message
+
+        print('qq deu')
+        print(server.getClientsNumber())
+        print(self.sent_count)
+
+        if(self.sent_count >= server.getClientsNumber()):
+            self.last_message = None
+
+            self.sent_count = 0
 
             with open(self.filename, "a") as file_write:
 
                 file_write.write("tombstone\n")
 
-            return lines
+        return data
+
 
     def append(self, data):
 
@@ -253,11 +272,9 @@ async def status_event_generator(request):
     
     while True:
 
-        data = redis.pop()
+        data = redis.pop(server)
 
         if(not data is None):
-
-            print('ola')
 
             yield {
                 "event": "new",
