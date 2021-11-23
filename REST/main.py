@@ -79,7 +79,7 @@ class Poll:
     # Verifica se o usuário é votante da enquete indicada (self)
     def isSubscriber(self, sub):
         for subscriber in self.subscribers:
-            if(subscriber.getUri() == sub):
+            if(subscriber.name == sub):
                 return True
         return False
 
@@ -107,10 +107,11 @@ class Server(object):
 
         return len(self.clients)
 
-    def getUser(self):
+    def getUser(self, name):
         for client in self.clients:
-            print(client) 
-        # raise Exception('Usuario nao encontrado!')
+            if client.name == name:
+                return client
+        raise Exception('Usuario nao encontrado!')
 
     def getPoll(self, title):
         for poll in self.polls:
@@ -131,15 +132,22 @@ class Server(object):
     # $$$$$',      ;  '$$$$$$$$
     # $$$$$$$$$$$.'   $$$$$$$$$
 
-    def newPoll(self, uri, title, place, suggestions, dueDate):
-        owner = self.getUser(uri)
+    def newPoll(self, username, title, place, suggestions, dueDate):
+        owner = self.getUser(username)
         suggestions = parseSuggestions(suggestions).split(',')
         poll = Poll(title, owner, str2Date(dueDate), place, suggestions)
         self.polls.append(poll)
 
-        # chamada de método cliente para notificação de nova enquete criada para todos os clientes inscritos até o momento
-        for client in self.clients:
-            client.getReference().notification(title, suggestions)
+        redis.append({
+            'event': 'new_event',
+            'data': {
+                'username': username,
+                'name': title,
+                'place': place,
+                'suggestions': suggestions,
+                'dueDate': dueDate
+            }
+        })
 
     def getPollSuggestions(self, title):
         poll = self.getPoll(title)
@@ -185,11 +193,10 @@ class Server(object):
                     if(poll.opened):
                         poll.closePoll()
 
-    def checkPoll(self, clientUri, pollName, signature):
+    def checkPoll(self, username, pollName):
         poll = self.getPoll(pollName)
-        client = self.getUser(clientUri)
 
-        if pubKey.verify(hash, signature) and ((poll.owner.uri == clientUri) or (poll.isSubscriber(clientUri))):
+        if poll.isSubscriber(username):
             return {
                 'error': False,
                 'message': 'Deu boa',
@@ -272,6 +279,9 @@ async def status_event_generator(request):
     
     while True:
 
+        if await request.is_disconnected():
+            print('disconected')
+
         data = redis.pop(server)
 
         if(not data is None):
@@ -302,6 +312,26 @@ async def clientSubscribe(request: Request):
 
     server.register(name)
     return name
+
+@app.post("/event")
+async def addEvent(request: Request):
+    data = await request.json()
+    username = data['username']
+    name = data['name']
+    place = data['place']
+    suggestions = data['suggestions']
+    due_date = data['due_date']
+
+    server.newPoll(username, name, place, suggestions, due_date)
+    return name
+
+@app.post("/details")
+async def addEvent(request: Request):
+    data = await request.json()
+    username = data['username']
+    name = data['name']
+    
+    return server.checkPoll(username, name)
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
