@@ -1,7 +1,6 @@
-from os import name
 import re
-from datetime import date, datetime, timedelta
-from fastapi import FastAPI, Request, APIRouter, params
+from datetime import datetime, timedelta
+from fastapi import FastAPI, Request, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 import asyncio
@@ -10,8 +9,6 @@ from sh import tail
 import time
 import subprocess
 import select
-
-from pydantic import BaseModel
 
 # formata o string para datetime no modelo descrito
 
@@ -82,7 +79,7 @@ class Poll:
     # Verifica se o usuário é votante da enquete indicada (self)
     def isSubscriber(self, sub):
         for subscriber in self.subscribers:
-            if(subscriber.getUri() == sub):
+            if(subscriber.name == sub):
                 return True
         return False
 
@@ -100,19 +97,21 @@ class ClientInstance:
 
 
 class Server(object):
-    def __init__(self, clients=[], polls=[], startDate=None):
+    def __init__(self, clients=[], polls=[], startDate=None, redis = None):
         self.clients = clients
         self.polls = polls
         self.startDate = datetime.now() + timedelta(seconds=15)
+        self.redis = redis
 
     def getClientsNumber(self):
 
         return len(self.clients)
 
-    def getUser(self):
+    def getUser(self, name):
         for client in self.clients:
-            print(client) 
-        # raise Exception('Usuario nao encontrado!')
+            if client.name == name:
+                return client
+        raise Exception('Usuario nao encontrado!')
 
     def getPoll(self, title):
         for poll in self.polls:
@@ -133,15 +132,22 @@ class Server(object):
     # $$$$$',      ;  '$$$$$$$$
     # $$$$$$$$$$$.'   $$$$$$$$$
 
-    def newPoll(self, uri, title, place, suggestions, dueDate):
-        owner = self.getUser(uri)
+    def newPoll(self, username, title, place, suggestions, dueDate):
+        owner = self.getUser(username)
         suggestions = parseSuggestions(suggestions).split(',')
         poll = Poll(title, owner, str2Date(dueDate), place, suggestions)
         self.polls.append(poll)
 
-        # chamada de método cliente para notificação de nova enquete criada para todos os clientes inscritos até o momento
-        for client in self.clients:
-            client.getReference().notification(title, suggestions)
+        redis.append({
+            'event': 'new_event',
+            'data': {
+                'username': username,
+                'name': title,
+                'place': place,
+                'suggestions': suggestions,
+                'dueDate': dueDate
+            }
+        })
 
     def getPollSuggestions(self, title):
         poll = self.getPoll(title)
@@ -154,6 +160,12 @@ class Server(object):
         instance = ClientInstance(name)
         # coloca o usuário na lista de usuários inscritos no servidor
         self.clients.append(instance)
+        self.redis.append({
+            'event': 'register',
+            'data': {
+                'name': name
+            }
+        })
         print('Usuário ' + name + ' criado com sucesso!')
 
     def pollVote(self, uri, title, chosenDate):
@@ -181,11 +193,10 @@ class Server(object):
                     if(poll.opened):
                         poll.closePoll()
 
-    def checkPoll(self, clientUri, pollName, signature):
+    def checkPoll(self, username, pollName):
         poll = self.getPoll(pollName)
-        client = self.getUser(clientUri)
 
-        if pubKey.verify(hash, signature) and ((poll.owner.uri == clientUri) or (poll.isSubscriber(clientUri))):
+        if poll.isSubscriber(username):
             return {
                 'error': False,
                 'message': 'Deu boa',
@@ -198,6 +209,52 @@ class Server(object):
             'data': None
         }
 
+class Redis:
+
+    def __init__(self, filename):
+        
+        self.filename = filename
+        self.last_message = None
+        self.sent_count = 0
+
+    def pop(self, server: Server):
+
+        data = None
+        if(self.last_message is None):
+            with open(self.filename, "r") as file_read:
+
+                self.last_message = file_read.readlines()[-1]
+
+                if('tombstone' in self.last_message):
+                    
+                    self.last_message = None
+
+                    return None
+
+        self.sent_count += 1
+        data = self.last_message
+
+        print('qq deu')
+        print(server.getClientsNumber())
+        print(self.sent_count)
+
+        if(self.sent_count >= server.getClientsNumber()):
+            self.last_message = None
+
+            self.sent_count = 0
+
+            with open(self.filename, "a") as file_write:
+
+                file_write.write("tombstone\n")
+
+        return data
+
+
+    def append(self, data):
+
+        with open(self.filename, "a") as file:
+            file.write(str(data) + '\n')
+
 
 app = FastAPI()
 
@@ -205,8 +262,8 @@ app = FastAPI()
 hostName = "localhost"
 serverPort = 8001
 
-server = Server()
-
+redis = Redis('redis.txt')
+server = Server(redis=redis)
 
 app.add_middleware(
     CORSMiddleware,
@@ -218,37 +275,20 @@ app.add_middleware(
 
 logs = []
 
-
-
-# definir classes com modelos padrão para receber no body da api
-class Client(BaseModel):
-    name: str
-    reference: str
-
-class Poll2(BaseModel):
-    title: str
-    owner: str
-    suggestion: str
-
-
-
 async def status_event_generator(request):
     
     while True:
 
-        # print('ois')
+        if await request.is_disconnected():
+            print('disconected')
 
-        # if(len(logs) > 0):
-        #     data = logs.pop()
+        data = redis.pop(server)
 
-        file1 = open('data/arch/redis.txt', 'r')
-        lines = file1.readlines()[-1]
-
-        if(not lines == 'tombstone'):
+        if(not data is None):
 
             yield {
                 "event": "new",
-                "data" : lines
+                "data" : str(data)
             }
 
         await asyncio.sleep(2)
@@ -256,8 +296,7 @@ async def status_event_generator(request):
 
 @app.get("/poll/user")
 def getUsers(request:Request):
-    # return server.getUser()
-    return open('data/mock/user.json').readlines()
+    return server.getUser()
 
 @app.get("/poll")
 async def read_root(request: Request):
@@ -265,38 +304,34 @@ async def read_root(request: Request):
     event_generator = status_event_generator(request)
     return EventSourceResponse(event_generator)
 
-import json
 
-@app.post("/poll/{clientName}")
+@app.post("/poll")
 async def clientSubscribe(request: Request):
-    # print('fia da mae')
-    # data = await request.json()
-    # print('fia da mae2')
-    # name = data['name']
-    # print('fia da mae3' + str(data))
-    payload = request.path_params
-    name = str(payload)
+    data = await request.json()
+    name = data['name']
+
     server.register(name)
-    # new = ['oie hahahahah'] * server.getClientsNumber()
-    # logs.extend(new)
+    return name
+
+@app.post("/event")
+async def addEvent(request: Request):
+    data = await request.json()
+    username = data['username']
+    name = data['name']
+    place = data['place']
+    suggestions = data['suggestions']
+    due_date = data['due_date']
+
+    server.newPoll(username, name, place, suggestions, due_date)
+    return name
+
+@app.post("/details")
+async def addEvent(request: Request):
+    data = await request.json()
+    username = data['username']
+    name = data['name']
     
-    with open("data/arch/redis.txt", "a") as myfile:
-        myfile.write(name + '\n')
-    return 'oie'
-
-
-@app.post("/new")
-def createPoll(poll: Poll2):
-    return(poll.owner + " criou enquete " + poll.title)
-
-class Item(BaseModel):
-    name: str
-    price: float
-    # is_offer: Optional[bool] = None
-
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
+    return server.checkPoll(username, name)
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
