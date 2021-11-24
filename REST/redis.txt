@@ -97,3 +97,9 @@ tombstone
 tombstone
 {'event': 'new_event', 'data': {'username': 'bads meu', 'name': 'evento', 'place': 'evento', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
 tombstone
+{'event': 'register', 'data': {'name': 'bads meu'}}
+tombstone
+{'event': 'register', 'data': {'name': 'bads meu'}}
+tombstone
+{'event': 'register', 'data': {'name': 'bads meu'}}
+tombstone

@@ -44,13 +44,13 @@ export default function Main() {
           <div id="cadastrar_evento">
             <h1>Aqui tu cadastra evento</h1>
             Nome da enquete
-            <input id="event_name"></input>
+            <input id="event_name" value="evento"></input>
             Local da enquete
-            <input id="event_place"></input>
+            <input id="event_place" value="daily"></input>
             Horários
-            <input id="event_suggestions"></input>
+            <input id="event_suggestions" value="05/11/2021 10:00:00, 05/11/2021 11:00:00, 05/11/2021 12:00:00, 05/11/2021 13:00:00"></input>
             Data final
-            <input id="event_due_date"></input>{" "}
+            <input id="event_due_date" value="03/11/2021 14:30:00"></input>
             <button
               onClick={() => {
                 cadastrarEvento();

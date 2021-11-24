@@ -168,8 +168,8 @@ class Server(object):
         })
         print('Usuário ' + name + ' criado com sucesso!')
 
-    def pollVote(self, uri, title, chosenDate):
-        user = self.getUser(uri)
+    def pollVote(self, username, title, chosenDate):
+        user = self.getUser(username)
         poll = self.getPoll(title)
 
         if(not poll.opened):
@@ -233,10 +233,6 @@ class Redis:
 
         self.sent_count += 1
         data = self.last_message
-
-        print('qq deu')
-        print(server.getClientsNumber())
-        print(self.sent_count)
 
         if(self.sent_count >= server.getClientsNumber()):
             self.last_message = None
@@ -325,11 +321,18 @@ async def addEvent(request: Request):
     server.newPoll(username, name, place, suggestions, due_date)
     return name
 
-@app.post("/details")
+@app.post("/vote")
 async def addEvent(request: Request):
     data = await request.json()
     username = data['username']
     name = data['name']
+    date = data['chosenDate']
+
+    server.pollVote(username, name, date)
+    return name
+
+@app.get("/details")
+async def checkEvent(username: str, name: str):
     
     return server.checkPoll(username, name)
 
