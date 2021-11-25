@@ -42,6 +42,9 @@ class Poll:
     def getTitle(self):
         return self.title
 
+    def getOwner(self):
+        return self.owner
+
     def getSuggestions(self):
         return self.suggestions
 
@@ -60,11 +63,11 @@ class Poll:
         winner = self.suggestions[self.voteCount.index(max(self.voteCount))]
 
         # envia mensagem aos inscritos/interessados o encerramento e resultado da enquete
-        for subscriber in self.subscribers:
-            subscriber.getReference().closedPoll(self.title, winner)
+        # for subscriber in self.subscribers:
+        #     subscriber.getReference().closedPoll(self.title, winner)
         # se o proprietário não votou na própria enquete informa o resultado a partir da condição a seguir
-        if self.owner not in self.subscribers:
-            self.owner.getReference().closedPoll(self.title, winner)
+        # if self.owner not in self.subscribers:
+        #     self.owner.getReference().closedPoll(self.title, winner)
 
     # Método para retornar dados de consulta de enquete: nome da enquete, quantidade de votos, sugestões, condição(aberta ou encerrada) e inscritos/interessados
     def getData(self):
@@ -92,7 +95,8 @@ class ClientInstance:
         self.name = name
         self.referece = reference
     
-    # def getClientName():
+    def getName(self):
+        return self.name
         
 
 
@@ -196,7 +200,7 @@ class Server(object):
     def checkPoll(self, username, pollName):
         poll = self.getPoll(pollName)
 
-        if poll.isSubscriber(username):
+        if (poll.isSubscriber(username) or poll.getOwner().name == username):
             return {
                 'error': False,
                 'message': 'Deu boa',
@@ -269,8 +273,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-logs = []
-
 async def status_event_generator(request):
     
     while True:
@@ -335,6 +337,8 @@ async def addEvent(request: Request):
 async def checkEvent(username: str, name: str):
     
     return server.checkPoll(username, name)
+
+
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
