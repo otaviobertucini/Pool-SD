@@ -21,7 +21,7 @@ export default function Main() {
     setName(input_name);
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("POST", "http://127.0.0.1:8000/poll", true);
+    xmlHttp.open("POST", "http://127.0.0.1:8000/client", true);
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
     xmlHttp.onload = function (event) {
       start();
@@ -43,7 +43,7 @@ export default function Main() {
     const evenDueDate = document.getElementById("evenDueDate").value;
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("POST", "http://127.0.0.1:8000/event", true);
+    xmlHttp.open("POST", `http://127.0.0.1:8000/event`, true);
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
     xmlHttp.onload = function (event) {
       console.log(event)
@@ -59,35 +59,73 @@ export default function Main() {
     );
   }
 
-  function fetchEvent(){
-
-    const eventName = document.getElementById("enquete").value;
+  function Votar(){
+    const eventName = document.getElementById("voteEventName").value;
+    // const chosenDate = document.getElementById("chosenDate").value;
+    const chosenDate = document.querySelector('input[name="suggestion"]:checked').value
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", `http://127.0.0.1:8000/details?username=${name}&name=${eventName}`, true);
+    xmlHttp.open("POST", `http://127.0.0.1:8000/vote`, true);
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
     xmlHttp.onload = function (event) {
-      const { data, error } = JSON.parse(event.target.response);
-      
-      if(error){
-        alert('deu bosta')
-        return
-      }
+      console.log(event)
+    };
+    xmlHttp.send(
+      JSON.stringify({
+        username: name,
+        name: eventName,
+        chosenDate: chosenDate
+      })
+    )
+
+
+  }
+
+  function fetchEvent(){
+
+    const eventName = document.getElementById("voteEventName").value;
+
+    var xmlHttp = new XMLHttpRequest();
+    // xmlHttp.open("GET", `http://127.0.0.1:8000/details?username=${name}&name=${eventName}`, true);
+    xmlHttp.open("GET", `http://127.0.0.1:8000/suggestions?name=${eventName}`, true);
+    xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+    xmlHttp.onload = function (event) {
+
+      console.log(event)
+
+      const data = JSON.parse(event.target.response);
       
       const radio_form = document.getElementById('radio_form');
       let append = ''
       console.log(data)
-      data.suggestions.forEach((suggestion, index) => {
+      data.forEach((suggestion, index) => {
 
         append += `<br><label><input type="radio" name="suggestion" value=${index + 1} />${suggestion}</label></br>`
 
       });
 
       radio_form.innerHTML = append
-
-      console.log(data);
     };
-    xmlHttp.send();
+     xmlHttp.send();
+
+  }
+
+  function consultEvent(){
+
+
+    const eventName = document.getElementById("verifyEventName").value;
+
+    var xmlHttp = new XMLHttpRequest();
+    // xmlHttp.open("GET", `http://127.0.0.1:8000/details?username=${name}&name=${eventName}`, true);
+    xmlHttp.open("GET", `http://127.0.0.1:8000/details?name=${eventName}&username=${name}`, true);
+    xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+    xmlHttp.onload = function (event) {
+
+      console.log('Deu boa: ', event);
+
+    };
+     xmlHttp.send();
+
 
   }
 
@@ -116,9 +154,9 @@ export default function Main() {
             </button></p>
           </div>
           <div>
-            <h1>Aqui tu vê os eventos disponíveis</h1>
+            <h1>Aqui tu vota nos eventos disponíveis</h1>
             Nome do evento
-            <input id="enquete" value="evento"></input>
+            <input id="voteEventName" value="evento"></input>
             <div id="eventDetail"></div>
             <form id="radio_form">
               {/* <label><input type="radio" name="test" value="A"> A</label>
@@ -133,9 +171,29 @@ export default function Main() {
               }}
             >
             Consultar </button></p>
+             <button onClick={() => {Votar()}}>Votar</button> 
 
           </div>
-          {/* <button onClick={() => {}}>Botão</button> */}
+          <div>
+            <h1>Aqui tu verifica o andamento dos eventos disponíveis</h1>
+            Nome do evento
+            <input id="verifyEventName" value="evento"></input>
+            <div id="eventDetail"></div>
+            <form id="radio_form">
+              {/* <label><input type="radio" name="test" value="A"> A</label>
+              <label><input type="radio" name="test" value="B" checked> B</label>
+              <label><input type="radio" name="test" value="C"> C</label> */}
+            </form>
+   
+
+            <p><button
+              onClick={() => {
+                consultEvent();
+              }}
+            >
+            Verificar </button></p>
+
+          </div>
         </>
       ) : (
         <>

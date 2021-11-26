@@ -1,6 +1,6 @@
 import re
 from datetime import datetime, timedelta
-from fastapi import FastAPI, Request, APIRouter
+from fastapi import FastAPI, Request, APIRouter, params
 from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 import asyncio
@@ -292,9 +292,9 @@ async def status_event_generator(request):
         await asyncio.sleep(2)
 
 
-@app.get("/poll/user")
-def getUsers(request:Request):
-    return server.getUser()
+@app.get("/poll/{user}")
+def getUser(request:Request):
+    return server.getUser(request.path_params['user'])
 
 @app.get("/poll")
 async def read_root(request: Request):
@@ -303,7 +303,7 @@ async def read_root(request: Request):
     return EventSourceResponse(event_generator)
 
 
-@app.post("/poll")
+@app.post("/client")
 async def clientSubscribe(request: Request):
     data = await request.json()
     name = data['name']
@@ -338,7 +338,10 @@ async def checkEvent(username: str, name: str):
     
     return server.checkPoll(username, name)
 
+@app.get("/suggestions")
+async def checkEvent(name: str):
 
+    return server.getPollSuggestions(name)
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
