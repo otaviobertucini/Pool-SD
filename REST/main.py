@@ -62,6 +62,13 @@ class Poll:
         self.opened = False
         winner = self.suggestions[self.voteCount.index(max(self.voteCount))]
 
+        redis.append({
+            'event': 'closedPoll',
+            'data': {
+                'message': 'Fechou a coisa srsrsrs'
+            }
+        })
+
         # envia mensagem aos inscritos/interessados o encerramento e resultado da enquete
         # for subscriber in self.subscribers:
         #     subscriber.getReference().closedPoll(self.title, winner)
@@ -110,6 +117,14 @@ class Server(object):
     def getClientsNumber(self):
 
         return len(self.clients)
+
+    def removeUser(self, username):
+
+        user = self.getUser(username)
+
+        self.clients.remove(user)
+
+        return self.clients
 
     def getUser(self, name):
         for client in self.clients:
@@ -176,6 +191,12 @@ class Server(object):
         user = self.getUser(username)
         poll = self.getPoll(title)
 
+        if(poll.owner == user):
+            return {
+                'error': True,
+                'message': 'Dono não pode votar!'
+            }
+
         if(not poll.opened):
             print('Enquete encerrada!')
             return
@@ -186,8 +207,13 @@ class Server(object):
               title + ' escolhendo: ' + poll.suggestions[index])
 
         # verifica se todos já votaram para encerrar a enquete (total -1 porque o proprietário não vota)
-        if(sum(poll.voteCount) == len(self.clients)-1):
+        if(sum(poll.voteCount) == len(self.clients)):
             poll.closePoll()
+
+        return return {
+                'error': False,
+                'message': 'Voto cadastrado com sucesso!'
+            }
 
     # Método chamado na thread para verificar data/horário de encerramento e encerrar enquete quando necessário
     def checkDueDate(self):
@@ -342,6 +368,15 @@ async def checkEvent(username: str, name: str):
 async def checkEvent(name: str):
 
     return server.getPollSuggestions(name)
+
+@app.post("/close")
+async def checkEvent(username: str):
+
+    print('CLOSED FOR ' + str(username))
+
+    server.removeUser(username)
+
+    return True    
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
