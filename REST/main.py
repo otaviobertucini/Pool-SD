@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 import asyncio
 import uvicorn
-from sh import tail
+# from sh import tail
 import time
 import subprocess
 import select
@@ -66,7 +66,7 @@ class Poll:
         redis.append({
             'event': 'closedPoll',
             'data': {
-                'message': 'Fechou a coisa srsrsrs'
+                'message': 'Enquete ${nome} encerrada'
             }
         })
 
@@ -194,9 +194,10 @@ class Server(object):
         poll = self.getPoll(title)
 
         if(poll.owner == user):
+            print('Dono da enquete não deve votar')
             return {
                 'error': True,
-                'message': 'Dono não pode votar!'
+                'message': 'Dono não pode votar!',
             }
 
         if(not poll.opened):
@@ -206,7 +207,7 @@ class Server(object):
         index = int(chosenDate) - 1
         poll.receiveVote(index, user)
         print('O usuário ' + user.getName() + ' votou na enquete ' +
-              title + ' escolhendo: ' + poll.suggestions[index])
+            title + ' escolhendo: ' + poll.suggestions[index])       
 
         if(sum(poll.voteCount) == len(self.clients)):
             poll.closePoll()
@@ -336,7 +337,7 @@ async def clientSubscribe(request: Request):
     name = data['name']
 
     server.register(name)
-    return name
+    return data
 
 @app.post("/event")
 async def addEvent(request: Request):
@@ -348,7 +349,7 @@ async def addEvent(request: Request):
     due_date = data['due_date']
 
     server.newPoll(username, name, place, suggestions, due_date)
-    return name
+    return data
 
 @app.post("/vote")
 async def addEvent(request: Request):
@@ -358,7 +359,7 @@ async def addEvent(request: Request):
     date = data['chosenDate']
 
     server.pollVote(username, name, date)
-    return name
+    return data
 
 @app.get("/details")
 async def checkEvent(username: str, name: str):
