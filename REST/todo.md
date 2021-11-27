@@ -1,2 +1,2 @@
-- Criar o timer para verificar enquetes encerradas / contar votos / limitar um voto por user
-- Criar a função de disconnect clientes
+- Criar o timer para verificar enquetes encerradas / contar votos (OK) / limitar um voto por user
+- Criar a função de disconnect clientes(OK)

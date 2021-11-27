@@ -4,3 +4,177 @@ tombstone
 tombstone
 {'event': 'closedPoll', 'data': {'message': 'Fechou a coisa srsrsrs'}}
 tombstone
+{'event': 'register', 'data': {'name': 'juca'}}
+tombstone
+{'event': 'register', 'data': {'name': 'maria'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'maria'}}
+tombstone
+{'event': 'register', 'data': {'name': 'joao'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'joao', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'closedPoll', 'data': {'message': 'Fechou a coisa srsrsrs'}}
+tombstone
+{'event': 'register', 'data': {'name': 'joao'}}
+tombstone
+{'event': 'register', 'data': {'name': 'maria'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'closedPoll', 'data': {'message': 'Fechou a coisa srsrsrs'}}
+tombstone
+{'event': 'register', 'data': {'name': 'jao'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'jao', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'saulo'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'saulo', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'saulo', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'new_event', 'data': {'username': 'saulo', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'saulo'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'saulo', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'juca'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'juca', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'saulo'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'saulo', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'saulo'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'saulo', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'saulo'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'saulo', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'juliao'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'juliao', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'saulo'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'saulo', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'joao'}}
+{'event': 'new_event', 'data': {'username': 'joao', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'joao'}}
+tombstone
+{'event': 'register', 'data': {'name': 'maria'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'closedPoll', 'data': {'message': 'Fechou a coisa srsrsrs'}}
+tombstone
+{'event': 'register', 'data': {'name': 'joao'}}
+tombstone
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'juca'}}
+tombstone
+{'event': 'register', 'data': {'name': 'joao'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'joao', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'saulo'}}
+tombstone
+{'event': 'register', 'data': {'name': 'otavio'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'otavio', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'closedPoll', 'data': {'message': 'Fechou a coisa srsrsrs'}}
+tombstone
+{'event': 'register', 'data': {'name': 'saulo'}}
+tombstone
+{'event': 'register', 'data': {'name': 'otavio'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'saulo', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'closedPoll', 'data': {'message': 'Fechou a coisa srsrsrs'}}
+tombstone
+{'event': 'register', 'data': {'name': 'juca'}}
+tombstone
+{'event': 'register', 'data': {'name': 'saulo'}}
+tombstone
+{'event': 'register', 'data': {'name': 'otavio'}}
+tombstone
+{'event': 'register', 'data': {'name': 'cris'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'cris', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'closedPoll', 'data': {'message': 'Enquete ?nome? encerrada'}}
+tombstone
+{'event': 'register', 'data': {'name': 'i'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'i', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 's'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 's', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'joao'}}
+{'event': 'register', 'data': {'name': 'maria2'}}
+{'event': 'new_event', 'data': {'username': 'maria2', 'name': 'reuniao2', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'o'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'o', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'li'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'li', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'kl'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'kl', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'u'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'u', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'maria'}}
+{'event': 'new_event', 'data': {'username': 'maria', 'name': 'reuniao', 'place': 'meet', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'joao'}}
+{'event': 'new_event', 'data': {'username': 'joao', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone
+{'event': 'register', 'data': {'name': 'hhhh'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'hhhh', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+tombstone

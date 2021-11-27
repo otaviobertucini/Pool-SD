@@ -95,7 +95,6 @@ export default function Main() {
     const eventName = document.getElementById("voteEventName").value;
 
     var xmlHttp = new XMLHttpRequest();
-    // xmlHttp.open("GET", `http://127.0.0.1:8000/details?username=${name}&name=${eventName}`, true);
     xmlHttp.open(
       "GET",
       `http://127.0.0.1:8000/suggestions?name=${eventName}`,
@@ -125,7 +124,6 @@ export default function Main() {
     const eventName = document.getElementById("verifyEventName").value;
 
     var xmlHttp = new XMLHttpRequest();
-    // xmlHttp.open("GET", `http://127.0.0.1:8000/details?username=${name}&name=${eventName}`, true);
     xmlHttp.open(
       "GET",
       `http://127.0.0.1:8000/details?name=${eventName}&username=${name}`,
