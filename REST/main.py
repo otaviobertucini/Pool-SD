@@ -194,7 +194,6 @@ class Server(object):
         poll = self.getPoll(title)
 
         if(poll.owner == user):
-            print('Dono da enquete não deve votar')
             return {
                 'error': True,
                 'message': 'Dono não pode votar!',
@@ -209,7 +208,7 @@ class Server(object):
         print('O usuário ' + user.getName() + ' votou na enquete ' +
             title + ' escolhendo: ' + poll.suggestions[index])       
 
-        if(sum(poll.voteCount) == len(self.clients)):
+        if(sum(poll.voteCount) == len(self.clients) - 1):
             poll.closePoll()
 
         return {
@@ -358,8 +357,8 @@ async def addEvent(request: Request):
     name = data['name']
     date = data['chosenDate']
 
-    server.pollVote(username, name, date)
-    return data
+    response = server.pollVote(username, name, date)
+    return response
 
 @app.get("/details")
 async def checkEvent(username: str, name: str):
