@@ -10,6 +10,7 @@ import time
 import subprocess
 import select
 import threading
+import json
 
 # formata o string para datetime no modelo descrito
 
@@ -64,9 +65,9 @@ class Poll:
         winner = self.suggestions[self.voteCount.index(max(self.voteCount))]
 
         redis.append({
-            'event': 'closedPoll',
+            'type': 'closedPoll',
             'data': {
-                'message': 'Enquete ${nome} encerrada'
+                'message': 'Enquete ' + self.title + ' encerrada'
             }
         })
 
@@ -112,7 +113,7 @@ class Server(object):
     def __init__(self, clients=[], polls=[], startDate=None, redis = None):
         self.clients = clients
         self.polls = polls
-        self.startDate = datetime.now() + timedelta(seconds=15)
+        self.startDate = datetime.now() + timedelta(seconds=12)
         self.redis = redis
 
     def getClientsNumber(self):
@@ -160,7 +161,7 @@ class Server(object):
         self.polls.append(poll)
 
         redis.append({
-            'event': 'new_event',
+            'type': 'new_event',
             'data': {
                 'username': username,
                 'name': title,
@@ -174,15 +175,21 @@ class Server(object):
         poll = self.getPoll(title)
 
         if(poll.opened):
-            return poll.getSuggestions()
-        return False
+            return {
+                'error': False,
+                'data': poll.getSuggestions()
+            }
+        return {
+                'error': True,
+                'message': 'Enquete encerrada'
+            }
 
     def register(self, name):
         instance = ClientInstance(name)
         # coloca o usuário na lista de usuários inscritos no servidor
         self.clients.append(instance)
         self.redis.append({
-            'event': 'register',
+            'type': 'register',
             'data': {
                 'name': name
             }
@@ -208,7 +215,8 @@ class Server(object):
         print('O usuário ' + user.getName() + ' votou na enquete ' +
             title + ' escolhendo: ' + poll.suggestions[index])       
 
-        if(sum(poll.voteCount) == len(self.clients) - 1):
+        # isso aqui está muito estranho
+        if(sum(poll.voteCount) == len(self.clients)):
             poll.closePoll()
 
         return {
@@ -233,7 +241,6 @@ class Server(object):
                 'message': 'Deu boa',
                 'data': poll.getData()
             }
-
         return {
             'error': True,
             'message': 'Permissão negada!',
@@ -280,7 +287,7 @@ class Redis:
     def append(self, data):
 
         with open(self.filename, "a") as file:
-            file.write(str(data) + '\n')
+            file.write(json.dumps(data) + '\n')
 
 
 app = FastAPI()
@@ -312,11 +319,11 @@ async def status_event_generator(request):
         if(not data is None):
 
             yield {
-                "event": "new",
-                "data" : str(data)
+                "event": "message",
+                "data" : str(data).replace('\n', '')
             }
 
-        await asyncio.sleep(2)
+        await asyncio.sleep(0.1)
 
 
 @app.get("/poll/{user}")
