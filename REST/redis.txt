@@ -1,6 +1,10 @@
-{'event': 'register', 'data': {'name': 'pussy'}}
+{'event': 'register', 'data': {'name': 'otavio'}}
 tombstone
-{'event': 'new_event', 'data': {'username': 'pussy', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
+{'event': 'register', 'data': {'name': 'otavio'}}
+tombstone
+{'event': 'register', 'data': {'name': 'otavio'}}
+tombstone
+{'event': 'new_event', 'data': {'username': 'otavio', 'name': 'evento', 'place': 'daily', 'suggestions': ['05/11/2021 10:00:00', '05/11/2021 11:00:00', '05/11/2021 12:00:00', '05/11/2021 13:00:00'], 'dueDate': '03/11/2021 14:30:00'}}
 tombstone
 {'event': 'closedPoll', 'data': {'message': 'Fechou a coisa srsrsrs'}}
 tombstone

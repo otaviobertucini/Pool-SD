@@ -9,6 +9,7 @@ from sh import tail
 import time
 import subprocess
 import select
+import threading
 
 # formata o string para datetime no modelo descrito
 
@@ -154,7 +155,8 @@ class Server(object):
     def newPoll(self, username, title, place, suggestions, dueDate):
         owner = self.getUser(username)
         suggestions = parseSuggestions(suggestions).split(',')
-        poll = Poll(title, owner, str2Date(dueDate), place, suggestions)
+        # poll = Poll(title, owner, str2Date(dueDate), place, suggestions)
+        poll = Poll(title, owner, datetime.now() + timedelta(seconds=10), place, suggestions)
         self.polls.append(poll)
 
         redis.append({
@@ -206,11 +208,10 @@ class Server(object):
         print('O usuário ' + user.getName() + ' votou na enquete ' +
               title + ' escolhendo: ' + poll.suggestions[index])
 
-        # verifica se todos já votaram para encerrar a enquete (total -1 porque o proprietário não vota)
         if(sum(poll.voteCount) == len(self.clients)):
             poll.closePoll()
 
-        return return {
+        return {
                 'error': False,
                 'message': 'Voto cadastrado com sucesso!'
             }
@@ -379,4 +380,9 @@ async def checkEvent(username: str):
     return True    
 
 if __name__ == "__main__":
+
+    thread = threading.Thread(target=server.checkDueDate)
+    thread.daemon = True
+    thread.start()
+
     uvicorn.run(app, port=8000)
