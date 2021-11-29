@@ -1,0 +1,110 @@
+{"type": "register", "data": {"name": "otaivo"}}
+tombstone
+{"type": "register", "data": {"name": "maira"}}
+tombstone
+{"type": "new_event", "data": {"username": "otaivo", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "a"}}
+tombstone
+{"type": "new_event", "data": {"username": "a", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "new_event", "data": {"username": "otavio", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "new_event", "data": {"username": "otavio", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "otaivo"}}
+tombstone
+{"type": "new_event", "data": {"username": "otaivo", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "otaivo"}}
+tombstone
+{"type": "new_event", "data": {"username": "otaivo", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "register", "data": {"name": "otaivo"}}
+tombstone
+{"type": "new_event", "data": {"username": "otaivo", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "a"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "new_event", "data": {"username": "otavio", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "register", "data": {"name": "otaivo"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "new_event", "data": {"username": "otavio", "name": "a", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "new_event", "data": {"username": "maria", "name": "mererere", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "new_event", "data": {"username": "otavio", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "new_event", "data": {"username": "otavio", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "oatvio"}}
+tombstone
+{"type": "new_event", "data": {"username": "oatvio", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "new_event", "data": {"username": "otavio", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada"}}
+tombstone
+{"type": "register", "data": {"name": "jorge"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "new_event", "data": {"username": "otavio", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "renan"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada"}}
+tombstone
+{"type": "new_event", "data": {"username": "renan", "name": "renan", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete renan encerrada"}}
+tombstone
+{"type": "register", "data": {"name": "otavio"}}
+tombstone
+{"type": "register", "data": {"name": "matunsa"}}
+tombstone
+{"type": "new_event", "data": {"username": "otavio", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 11:00:00 com 1 votos."}}
+tombstone
+{"type": "new_event", "data": {"username": "matunsa", "name": "evento2", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento2 encerrada. Hor\u00e1rio escolhido foi 05/11/2021 13:00:00 com 1 votos."}}
+tombstone

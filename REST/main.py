@@ -67,16 +67,9 @@ class Poll:
         redis.append({
             'type': 'closedPoll',
             'data': {
-                'message': 'Enquete ' + self.title + ' encerrada'
+                'message': 'Enquete ' + self.title + ' encerrada. Horário escolhido foi ' + winner + ' com ' + str(max(self.voteCount)) + ' votos.'
             }
         })
-
-        # envia mensagem aos inscritos/interessados o encerramento e resultado da enquete
-        # for subscriber in self.subscribers:
-        #     subscriber.getReference().closedPoll(self.title, winner)
-        # se o proprietário não votou na própria enquete informa o resultado a partir da condição a seguir
-        # if self.owner not in self.subscribers:
-        #     self.owner.getReference().closedPoll(self.title, winner)
 
     # Método para retornar dados de consulta de enquete: nome da enquete, quantidade de votos, sugestões, condição(aberta ou encerrada) e inscritos/interessados
     def getData(self):
@@ -103,14 +96,13 @@ class ClientInstance:
     def __init__(self, name="", reference=""):
         self.name = name
         self.referece = reference
-    
+
     def getName(self):
         return self.name
-        
 
 
 class Server(object):
-    def __init__(self, clients=[], polls=[], startDate=None, redis = None):
+    def __init__(self, clients=[], polls=[], startDate=None, redis=None):
         self.clients = clients
         self.polls = polls
         self.startDate = datetime.now() + timedelta(seconds=12)
@@ -156,8 +148,7 @@ class Server(object):
     def newPoll(self, username, title, place, suggestions, dueDate):
         owner = self.getUser(username)
         suggestions = parseSuggestions(suggestions).split(',')
-        # poll = Poll(title, owner, str2Date(dueDate), place, suggestions)
-        poll = Poll(title, owner, datetime.now() + timedelta(seconds=10), place, suggestions)
+        poll = Poll(title, owner, str2Date(dueDate), place, suggestions)
         self.polls.append(poll)
 
         redis.append({
@@ -180,9 +171,9 @@ class Server(object):
                 'data': poll.getSuggestions()
             }
         return {
-                'error': True,
-                'message': 'Enquete encerrada'
-            }
+            'error': True,
+            'message': 'Enquete encerrada'
+        }
 
     def register(self, name):
         instance = ClientInstance(name)
@@ -213,16 +204,19 @@ class Server(object):
         index = int(chosenDate) - 1
         poll.receiveVote(index, user)
         print('O usuário ' + user.getName() + ' votou na enquete ' +
-            title + ' escolhendo: ' + poll.suggestions[index])       
+              title + ' escolhendo: ' + poll.suggestions[index])
 
-        # isso aqui está muito estranho
-        if(sum(poll.voteCount) == len(self.clients)):
+        print('a')
+        print(poll.voteCount)
+        print('b')
+        print(len(self.clients))
+        if(sum(poll.voteCount) == len(self.clients) - 1):
             poll.closePoll()
 
         return {
-                'error': False,
-                'message': 'Voto cadastrado com sucesso!'
-            }
+            'error': False,
+            'message': 'Voto cadastrado com sucesso!'
+        }
 
     # Método chamado na thread para verificar data/horário de encerramento e encerrar enquete quando necessário
     def checkDueDate(self):
@@ -247,10 +241,11 @@ class Server(object):
             'data': None
         }
 
+
 class Redis:
 
     def __init__(self, filename):
-        
+
         self.filename = filename
         self.last_message = None
         self.sent_count = 0
@@ -264,7 +259,7 @@ class Redis:
                 self.last_message = file_read.readlines()[-1]
 
                 if('tombstone' in self.last_message):
-                    
+
                     self.last_message = None
 
                     return None
@@ -282,7 +277,6 @@ class Redis:
                 file_write.write("tombstone\n")
 
         return data
-
 
     def append(self, data):
 
@@ -307,8 +301,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 async def status_event_generator(request):
-    
+
     while True:
 
         if await request.is_disconnected():
@@ -320,15 +315,16 @@ async def status_event_generator(request):
 
             yield {
                 "event": "message",
-                "data" : str(data).replace('\n', '')
+                "data": str(data).replace('\n', '')
             }
 
         await asyncio.sleep(0.1)
 
 
 @app.get("/poll/{user}")
-def getUser(request:Request):
+def getUser(request: Request):
     return server.getUser(request.path_params['user'])
+
 
 @app.get("/poll")
 async def read_root(request: Request):
@@ -345,6 +341,7 @@ async def clientSubscribe(request: Request):
     server.register(name)
     return data
 
+
 @app.post("/event")
 async def addEvent(request: Request):
     data = await request.json()
@@ -357,6 +354,7 @@ async def addEvent(request: Request):
     server.newPoll(username, name, place, suggestions, due_date)
     return data
 
+
 @app.post("/vote")
 async def addEvent(request: Request):
     data = await request.json()
@@ -367,15 +365,18 @@ async def addEvent(request: Request):
     response = server.pollVote(username, name, date)
     return response
 
+
 @app.get("/details")
 async def checkEvent(username: str, name: str):
-    
+
     return server.checkPoll(username, name)
+
 
 @app.get("/suggestions")
 async def checkEvent(name: str):
 
     return server.getPollSuggestions(name)
+
 
 @app.post("/close")
 async def checkEvent(username: str):
@@ -384,7 +385,7 @@ async def checkEvent(username: str):
 
     server.removeUser(username)
 
-    return True    
+    return True
 
 if __name__ == "__main__":
 
