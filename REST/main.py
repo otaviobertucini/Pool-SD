@@ -13,14 +13,10 @@ import threading
 import json
 
 # formata o string para datetime no modelo descrito
-
-
 def str2Date(date):
     return datetime.strptime(date, '%d/%m/%Y %H:%M:%S')
 
 # garante que não haja espaços excedentes na string
-
-
 def parseSuggestions(suggestions):
     exp = re.compile(' {0,}, {0,}')
     return re.sub(exp, ',', suggestions)
@@ -28,8 +24,6 @@ def parseSuggestions(suggestions):
 # Classe que referencia enquetes e guarda os atributos nome da enquete, proprietário, data final,
 # local de reunião, sugestões de horário, quantidade de votos, flag para verificação de enquete
 # em andamento e usuários inscritos/votante
-
-
 class Poll:
     def __init__(self, title="", owner=None, dueDate=None, place="", suggestions=[], opened=True, subscribers=[]):
         self.title = title
@@ -130,8 +124,8 @@ class Server(object):
         for poll in self.polls:
             if poll.getTitle() == title:
                 return poll
-        raise Exception('Enquete nao encontrado!')
-
+        # raise Exception('Enquete nao encontrado!')
+        return 'erro'
         # MÃO DO SIMÃO
     # coesão e desacoplamento
     # $$$$$$$$$$$$$$$$$$$$$$$$$
@@ -164,8 +158,14 @@ class Server(object):
 
     def getPollSuggestions(self, title):
         poll = self.getPoll(title)
+          
+        if(poll == 'erro'):
+            return{
+                'error': True,
+                'message': 'Enquete enquete não existe'
+            }
 
-        if(poll.opened):
+        elif(poll.opened):
             return {
                 'error': False,
                 'data': poll.getSuggestions()
@@ -191,12 +191,21 @@ class Server(object):
         user = self.getUser(username)
         poll = self.getPoll(title)
 
+        # verifica se o usuário é o dono da enquete e proíbe a votação
         if(poll.owner == user):
             return {
                 'error': True,
                 'message': 'Dono não pode votar!',
             }
 
+        # verifica se o usuário já votou na enquete e proíbe a votação
+        if(poll.isSubscriber(user.getName())):
+            return{
+                'error': True,
+                'message': 'Usuário ' + user.getName() + ' já votou'
+            }
+        
+        # verifica se a enquete foi fechada e proíbe a votação
         if(not poll.opened):
             print('Enquete encerrada!')
             return
@@ -206,10 +215,10 @@ class Server(object):
         print('O usuário ' + user.getName() + ' votou na enquete ' +
               title + ' escolhendo: ' + poll.suggestions[index])
 
-        print('a')
-        print(poll.voteCount)
-        print('b')
-        print(len(self.clients))
+        # print('a')
+        # print(poll.voteCount)
+        # print('b')
+        # print(len(self.clients))
         if(sum(poll.voteCount) == len(self.clients) - 1):
             poll.closePoll()
 
@@ -229,7 +238,12 @@ class Server(object):
     def checkPoll(self, username, pollName):
         poll = self.getPoll(pollName)
 
-        if (poll.isSubscriber(username) or poll.getOwner().name == username):
+        if(poll == 'erro'):
+            return {
+                'error': True,
+                'message': 'Enquete não existe'
+            }
+        if (poll.isSubscriber(username) or poll.getOwner().name == username):           
             return {
                 'error': False,
                 'message': 'Deu boa',
@@ -237,7 +251,7 @@ class Server(object):
             }
         return {
             'error': True,
-            'message': 'Permissão negada!',
+            'message': 'Permissão negada! Usuário ' + username + ' não cadastrado na enquete.',
             'data': None
         }
 
@@ -286,7 +300,6 @@ class Redis:
 
 app = FastAPI()
 
-
 hostName = "localhost"
 serverPort = 8001
 
@@ -321,6 +334,9 @@ async def status_event_generator(request):
         await asyncio.sleep(0.1)
 
 
+
+# Rotas para as chamadas de api #
+
 @app.get("/poll/{user}")
 def getUser(request: Request):
     return server.getUser(request.path_params['user'])
@@ -332,7 +348,7 @@ async def read_root(request: Request):
     event_generator = status_event_generator(request)
     return EventSourceResponse(event_generator)
 
-
+# Registrar um novo cliente
 @app.post("/client")
 async def clientSubscribe(request: Request):
     data = await request.json()
@@ -341,7 +357,7 @@ async def clientSubscribe(request: Request):
     server.register(name)
     return data
 
-
+# Registrar nova enquete
 @app.post("/event")
 async def addEvent(request: Request):
     data = await request.json()
@@ -354,7 +370,7 @@ async def addEvent(request: Request):
     server.newPoll(username, name, place, suggestions, due_date)
     return data
 
-
+# Registrar novo voto
 @app.post("/vote")
 async def addEvent(request: Request):
     data = await request.json()
@@ -365,19 +381,19 @@ async def addEvent(request: Request):
     response = server.pollVote(username, name, date)
     return response
 
-
+# Acessar detalhes da enquete
 @app.get("/details")
 async def checkEvent(username: str, name: str):
 
     return server.checkPoll(username, name)
 
-
+# Acessar sugestões de horário para votação em determinada enquete
 @app.get("/suggestions")
 async def checkEvent(name: str):
 
     return server.getPollSuggestions(name)
 
-
+# Retirar usuário da lista (receber mensagens/notoficações em cada novo evento)
 @app.post("/close")
 async def checkEvent(username: str):
 

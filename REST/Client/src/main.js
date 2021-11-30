@@ -11,6 +11,7 @@ export default function Main() {
     let new_source = new EventSource("http://127.0.0.1:8000/poll");
     setSource(new_source);
 
+
     new_source.addEventListener("message", (event) => {
 
       const { type, data } = JSON.parse(event.data);
@@ -38,6 +39,7 @@ export default function Main() {
     });
   }
 
+  // Registrar novo usuário chamando o método POST ->URL/client da api
   function cadastrar() {
     const input_name = document.getElementById("name").value;
     setName(input_name);
@@ -68,6 +70,7 @@ export default function Main() {
     );
   }
 
+  // Registrar nova enquete/evento chamando o método POST ->URL/event da api
   function cadastrarEvento() {
     const eventName = document.getElementById("eventName").value;
     const eventPlace = document.getElementById("eventPlace").value;
@@ -90,10 +93,10 @@ export default function Main() {
       })
     );
   }
-
+  // Registrar novo voto em determinada enquete chamando o método POST ->URL/vote da api
+  // e passando nome do usuário, nome da enquete e data escolhida como parâmetro 
   function Votar() {
     const eventName = document.getElementById("voteEventName").value;
-    // const chosenDate = document.getElementById("chosenDate").value;
     const chosenDate = document.querySelector(
       'input[name="suggestion"]:checked'
     ).value;
@@ -125,7 +128,8 @@ export default function Main() {
       })
     );
   }
-
+  // Consulta sugestões para voto em determinada enquete através  do método GET ->URL/suggestions da api
+  // passando o nome da enquete como parâmetro
   function fetchEvent() {
     const eventName = document.getElementById("voteEventName").value;
 
@@ -137,8 +141,6 @@ export default function Main() {
     );
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
     xmlHttp.onload = function (event) {
-      // console.log(event);
-
       const { error, data, message } = JSON.parse(event.target.response);
 
       if (error) {
@@ -158,6 +160,8 @@ export default function Main() {
     xmlHttp.send();
   }
 
+  // Consulta andamento de determinada enquete através  do método GET ->URL/details da api
+  // passando o nome da enquete e nome do usuário como parâmetro
   function consultEvent() {
     const eventName = document.getElementById("verifyEventName").value;
 
@@ -174,30 +178,34 @@ export default function Main() {
 
       const verifyResult = document.getElementById("verifyResult");
 
+      if (error) {
+        console.log('Usuário ' + name + 'não cadastrado nesta enquete')
+        verifyResult.innerHTML = message
+        // return
+      }
+      else {
+        var votes = 0;
+        data.voteCount.forEach((vote, index) => {
+          votes += data.voteCount[index]
+        })
 
-      var votes = 0;
-      data.voteCount.forEach((vote, index) => {
-        votes += data.voteCount[index]
-      })
+        let suggestions = ''
+        data.suggestions.forEach((suggestion, index) => {
+          suggestions += `<br>${suggestion} tem ${data.voteCount[index]} votos</br>`
+        })
 
-      let suggestions = ''
-      data.suggestions.forEach((suggestion, index) => {
-        suggestions += `<br>${suggestion} tem ${data.voteCount[index]} votos</br>`
-      })
+        let subs = "";
+        data.subscribers.forEach((subscriber, index) => {
+          subs += `${subscriber}, `
+        })
+        verifyResult.innerHTML = `<br>Consulta realizada com sucesso:</br>
+        <br>Evento "${data.name}" possui ${votes} votos</br>
+        <br>${data.opened ? "Enquete andamento" : "Enquete encerrada"}</br>
+        ${suggestions}
+        <br>Usuários inscritos/votantes: ${subs}</br>`;
+      };
+    }
 
-      let subs = "";
-      data.subscribers.forEach((subscriber, index) => {
-        subs += `${subscriber}, `
-      })
-
-
-      verifyResult.innerHTML = `<br>Consulta realizada com sucesso:</br>
-                                <br>Evento "${data.name}" possui ${votes} votos</br>
-                                <br>${data.opened ? "Enquete andamento" : "Enquete encerrada"}</br>
-                                ${suggestions}
-                                <br>Usuários inscritos/votantes: ${subs}</br>`;
-
-    };
     xmlHttp.send();
   }
 
@@ -211,7 +219,7 @@ export default function Main() {
             <h1>Aqui tu cadastra evento</h1>
             <p>
               Nome da enquete
-              <input id="eventName" defaultValue="evento"></input>
+              <input id="eventName" /*defaultValue="evento"*/></input>
             </p>
             <p>
               Local da enquete
@@ -265,7 +273,7 @@ export default function Main() {
           <div>
             <h1>Aqui tu verifica o andamento dos eventos disponíveis</h1>
             Nome do evento
-            <input id="verifyEventName" defaultValue="evento"></input>
+            <input id="verifyEventName" /*defaultValue="evento"*/></input>
             <div id="verifyResult"></div>
             <p>
               <button
