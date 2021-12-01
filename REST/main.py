@@ -126,6 +126,7 @@ class Server(object):
                 return poll
         # raise Exception('Enquete nao encontrado!')
         return 'erro'
+        
         # MÃO DO SIMÃO
     # coesão e desacoplamento
     # $$$$$$$$$$$$$$$$$$$$$$$$$
@@ -215,10 +216,7 @@ class Server(object):
         print('O usuário ' + user.getName() + ' votou na enquete ' +
               title + ' escolhendo: ' + poll.suggestions[index])
 
-        # print('a')
-        # print(poll.voteCount)
-        # print('b')
-        # print(len(self.clients))
+        # verifica número de votos, se for igual ao número de inscritos encerra a enquete
         if(sum(poll.voteCount) == len(self.clients) - 1):
             poll.closePoll()
 
@@ -255,15 +253,17 @@ class Server(object):
             'data': None
         }
 
-
+# Classe de simulação de banco -> REDIS (fila -> FIFO)
 class Redis:
 
+    # construtor
     def __init__(self, filename):
 
         self.filename = filename
         self.last_message = None
         self.sent_count = 0
 
+    # lê a última mensagem que está na vez de ser lida
     def pop(self, server: Server):
 
         data = None
@@ -278,20 +278,23 @@ class Redis:
 
                     return None
 
+        # contador de mensagens enviadas/notificações
         self.sent_count += 1
         data = self.last_message
 
+        # checa o número de notificações e encerra o envio quando for >= número de inscritos
         if(self.sent_count >= server.getClientsNumber()):
             self.last_message = None
 
             self.sent_count = 0
 
             with open(self.filename, "a") as file_write:
-
+                # indica o final do arquivo -> não há novas mensagens
                 file_write.write("tombstone\n")
 
         return data
 
+    # adiciona mensagens à fila no REDIS
     def append(self, data):
 
         with open(self.filename, "a") as file:
@@ -306,6 +309,7 @@ serverPort = 8001
 redis = Redis('redis.txt')
 server = Server(redis=redis)
 
+# Diz pro servidor que são aceitos qualquer origem, qualquer método e qualquer cabeçalho(header)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -315,19 +319,17 @@ app.add_middleware(
 )
 
 
-async def status_event_generator(request):
+# método que 'escuta/lê' o REDIS intermitentemente 
+async def status_event_generator(request, username):
 
     while True:
-
-        if await request.is_disconnected():
-            print('disconected')
 
         data = redis.pop(server)
 
         if(not data is None):
 
             yield {
-                "event": "message",
+                "event": username,
                 "data": str(data).replace('\n', '')
             }
 
@@ -341,11 +343,12 @@ async def status_event_generator(request):
 def getUser(request: Request):
     return server.getUser(request.path_params['user'])
 
-
+# Inicializa o SSE do starlete.sse -> EvenSourceResponse
+# utilizar o publish do sse do python
 @app.get("/poll")
-async def read_root(request: Request):
+async def read_root(request: Request, username: str):
     asyncio.set_event_loop(asyncio.new_event_loop())
-    event_generator = status_event_generator(request)
+    event_generator = status_event_generator(request, username)
     return EventSourceResponse(event_generator)
 
 # Registrar um novo cliente
@@ -393,7 +396,7 @@ async def checkEvent(name: str):
 
     return server.getPollSuggestions(name)
 
-# Retirar usuário da lista (receber mensagens/notoficações em cada novo evento)
+# Retirar usuário da lista (receber mensagens/notoficações em cada novo evento) quando o navegador é fechado
 @app.post("/close")
 async def checkEvent(username: str):
 

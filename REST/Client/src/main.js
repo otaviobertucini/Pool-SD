@@ -7,12 +7,13 @@ export default function Main() {
   const [source, setSource] = useState(null);
   const [name, setName] = useState(null);
 
-  function start() {
-    let new_source = new EventSource("http://127.0.0.1:8000/poll");
+  function start(name) {
+    // acrescenta o nome do usuário como parâmetro para a rota de api
+    let new_source = new EventSource(`http://127.0.0.1:8000/poll?username=${name}`);
     setSource(new_source);
 
 
-    new_source.addEventListener("message", (event) => {
+    new_source.addEventListener(name, (event) => {
 
       const { type, data } = JSON.parse(event.data);
       let logger = document.getElementById("eventLog");
@@ -20,11 +21,11 @@ export default function Main() {
       if (type === 'register') {
 
         logger.innerHTML += `<p>O usuário ${data.name} foi cadastrado</p>`
-
         return
       }
 
       if (type === 'closedPoll') {
+        
         logger.innerHTML += `<p>${data.message}</p>`
 
         return
@@ -48,8 +49,9 @@ export default function Main() {
     xmlHttp.open("POST", "http://127.0.0.1:8000/client", true);
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
     xmlHttp.onload = function (event) {
-      start();
+      start(input_name);
 
+      // quando o navegador é fechado retira o usuário da lista de inscritos
       window.addEventListener("beforeunload", function (e) {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open(
@@ -58,7 +60,7 @@ export default function Main() {
           true
         );
         xmlHttp.send();
-        alert('ta fechando essa loca')
+        alert('FECHOU')
         e.preventDefault();
         e.returnValue = "";
       });
@@ -234,7 +236,7 @@ export default function Main() {
             </p>
             <p>
               Data final
-              <input id="evenDueDate" defaultValue="02/12/2021 14:30:00"></input>
+              <input id="evenDueDate" /*defaultValue="02/12/2021 14:30:00"*/></input>
             </p>
             <p>
               <button
@@ -249,7 +251,7 @@ export default function Main() {
           <div>
             <h1>Aqui tu vota nos eventos disponíveis</h1>
             Nome do evento
-            <input id="voteEventName" defaultValue="evento"></input>
+            <input id="voteEventName" /*defaultValue="evento"*/></input>
             <div id="eventDetail"></div>
             <p>
               <button

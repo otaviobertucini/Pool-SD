@@ -385,3 +385,147 @@ tombstone
 tombstone
 {"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 3 votos."}}
 tombstone
+{"type": "register", "data": {"name": "Sabrina"}}
+tombstone
+{"type": "register", "data": {"name": "Morgana"}}
+tombstone
+{"type": "register", "data": {"name": "Sheila"}}
+tombstone
+{"type": "new_event", "data": {"username": "Sabrina", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 2 votos."}}
+tombstone
+{"type": "register", "data": {"name": "juca"}}
+tombstone
+{"type": "register", "data": {"name": "joao"}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "new_event", "data": {"username": "juca", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 2 votos."}}
+tombstone
+{"type": "register", "data": {"name": "nnn"}}
+tombstone
+{"type": "new_event", "data": {"username": "maria", "name": "reuniao", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "atrasad\u00e3o"}}
+tombstone
+{"type": "register", "data": {"name": "Joao"}}
+tombstone
+{"type": "register", "data": {"name": "Maria"}}
+tombstone
+{"type": "register", "data": {"name": "Cristina"}}
+tombstone
+{"type": "new_event", "data": {"username": "Joao", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "new_event", "data": {"username": "Maria", "name": "reuniao", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 11:00:00 com 2 votos."}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "register", "data": {"name": "maria"}}
+tombstone
+{"type": "register", "data": {"name": "joao"}}
+tombstone
+{"type": "register", "data": {"name": "mara"}}
+tombstone
+{"type": "new_event", "data": {"username": "maria", "name": "reuniao", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "new_event", "data": {"username": "mara", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete reuniao encerrada. Hor\u00e1rio escolhido foi 05/11/2021 13:00:00 com 2 votos."}}
+tombstone
+{"type": "register", "data": {"name": "lala"}}
+tombstone
+{"type": "register", "data": {"name": "lele"}}
+tombstone
+{"type": "register", "data": {"name": "lili"}}
+tombstone
+{"type": "new_event", "data": {"username": "lala", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 2 votos."}}
+tombstone
+{"type": "register", "data": {"name": "sapo"}}
+tombstone
+{"type": "register", "data": {"name": "btt"}}
+tombstone
+{"type": "register", "data": {"name": "jaja"}}
+tombstone
+{"type": "register", "data": {"name": "kika"}}
+tombstone
+{"type": "new_event", "data": {"username": "btt", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 2 votos."}}
+tombstone
+{"type": "register", "data": {"name": "ju"}}
+tombstone
+{"type": "register", "data": {"name": "sal"}}
+tombstone
+{"type": "register", "data": {"name": "imeni"}}
+tombstone
+{"type": "new_event", "data": {"username": "ju", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "ma"}}
+tombstone
+{"type": "register", "data": {"name": "oh"}}
+tombstone
+{"type": "register", "data": {"name": "ee"}}
+tombstone
+{"type": "new_event", "data": {"username": "ma", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 2 votos."}}
+tombstone
+{"type": "register", "data": {"name": "opa"}}
+tombstone
+{"type": "new_event", "data": {"username": "opa", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "oi"}}
+tombstone
+{"type": "register", "data": {"name": "cara"}}
+tombstone
+{"type": "register", "data": {"name": "de boi"}}
+tombstone
+{"type": "new_event", "data": {"username": "oi", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "new_event", "data": {"username": "de boi", "name": "reuniao", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete reuniao encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 1 votos."}}
+tombstone
+{"type": "register", "data": {"name": "k"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 1 votos."}}
+tombstone
+{"type": "register", "data": {"name": "Saulo"}}
+tombstone
+{"type": "register", "data": {"name": "Otavio"}}
+tombstone
+{"type": "register", "data": {"name": "Cristina"}}
+tombstone
+{"type": "new_event", "data": {"username": "Saulo", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 2 votos."}}
+tombstone
+{"type": "register", "data": {"name": "saulo"}}
+tombstone
+{"type": "register", "data": {"name": "kk"}}
+tombstone
+{"type": "register", "data": {"name": "jj"}}
+tombstone
+{"type": "new_event", "data": {"username": "saulo", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "02/12/2021 14:30:00"}}
+tombstone
+{"type": "register", "data": {"name": "ggg"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 3 votos."}}
+tombstone
+{"type": "register", "data": {"name": "jj"}}
+tombstone
+{"type": "register", "data": {"name": "kk"}}
+tombstone
+{"type": "register", "data": {"name": "ii"}}
+tombstone
+{"type": "new_event", "data": {"username": "jj", "name": "evento", "place": "daily", "suggestions": ["05/11/2021 10:00:00", "05/11/2021 11:00:00", "05/11/2021 12:00:00", "05/11/2021 13:00:00"], "dueDate": "01/12/2021 14:05:00"}}
+tombstone
+{"type": "closedPoll", "data": {"message": "Enquete evento encerrada. Hor\u00e1rio escolhido foi 05/11/2021 10:00:00 com 1 votos."}}
+tombstone
